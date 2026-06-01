@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messages | Adolph Motors Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="admin-body">
+
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="admin-sidebar-header">
+    <div class="logo nav-logo"><div class="logo-icon">A</div><div class="logo-text">Adolph Motors<span>Admin Panel</span></div></div>
+  </div>
+  <nav class="admin-nav">
+    <div class="admin-nav-section">Main</div>
+    <a href="/admin/dashboard.html" class="admin-nav-item"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+    <a href="/admin/cars.html" class="admin-nav-item"><i class="bi bi-car-front"></i> Inventory</a>
+    <div class="admin-nav-section">Customers</div>
+    <a href="/admin/bookings.html" class="admin-nav-item"><i class="bi bi-calendar-check"></i> Bookings</a>
+    <a href="/admin/messages.html" class="admin-nav-item active"><i class="bi bi-envelope"></i> Messages</a>
+    <a href="/admin/trade-ins.html" class="admin-nav-item"><i class="bi bi-arrow-left-right"></i> Trade-Ins</a>
+    <a href="/admin/finance.html" class="admin-nav-item"><i class="bi bi-bank"></i> Finance Apps</a>
+    <div class="admin-nav-section">System</div>
+    <a href="/" target="_blank" class="admin-nav-item"><i class="bi bi-box-arrow-up-right"></i> View Website</a>
+    <a href="#" class="admin-nav-item" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  </nav>
+  <div class="admin-sidebar-footer">
+    <div class="admin-user">
+      <div class="admin-user-avatar" id="userAvatarLetter">A</div>
+      <div class="admin-user-info"><div class="name" id="adminUsername">Admin</div><div class="role">Administrator</div></div>
+    </div>
+  </div>
+</aside>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div style="display:flex; align-items:center; gap:1rem">
+      <button class="btn btn-ghost btn-sm" id="sidebarToggle"><i class="bi bi-list" style="font-size:1.2rem"></i></button>
+      <h1>Contact Messages</h1>
+    </div>
+    <div class="admin-topbar-actions">
+      <button class="btn btn-ghost btn-sm" id="showUnreadBtn">Unread Only</button>
+      <button class="btn btn-ghost btn-sm" id="showAllBtn">Show All</button>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5>Messages (<span id="messagesCount">...</span>)</h5>
+        <button class="btn btn-ghost btn-sm" onclick="loadMessages()"><i class="bi bi-arrow-clockwise"></i></button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr><th>From</th><th>Email</th><th>Subject</th><th>Message</th><th>Date</th><th>Status</th><th style="text-align:right">Actions</th></tr>
+          </thead>
+          <tbody id="messagesTableBody">
+            <tr><td colspan="7" style="text-align:center; padding:3rem"><div class="spinner" style="margin:0 auto"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:1rem 1.5rem; border-top:1px solid var(--gray-100); display:flex; justify-content:center" id="messagesPagination"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Message Detail Modal -->
+<div class="modal-overlay" id="messageModal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <h3><i class="bi bi-envelope-open" style="color:var(--accent)"></i> Message</h3>
+      <button class="modal-close" onclick="document.getElementById('messageModal').classList.remove('open')"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body" id="messageModalBody"></div>
+  </div>
+</div>
+
+<script>
+  const token = localStorage.getItem('adminToken');
+  if (!token) window.location.href = '/admin/login.html';
+  const admin = JSON.parse(localStorage.getItem('adminUser') || '{}');
+  if (admin.username) { document.getElementById('adminUsername').textContent = admin.username; document.getElementById('userAvatarLetter').textContent = admin.username[0].toUpperCase(); }
+  document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('adminToken'); localStorage.removeItem('adminUser'); window.location.href = '/admin/login.html'; });
+  document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('adminSidebar').classList.toggle('open'));
+
+  let filterUnread = false;
+  if (new URLSearchParams(location.search).get('filter') === 'unread') filterUnread = true;
+
+  document.getElementById('showUnreadBtn').addEventListener('click', () => { filterUnread = true; loadMessages(1); });
+  document.getElementById('showAllBtn').addEventListener('click', () => { filterUnread = false; loadMessages(1); });
+
+  async function loadMessages(page = 1) {
+    let url = `/api/contact?page=${page}&limit=20`;
+    if (filterUnread) url += '&is_read=false';
+
+    const tbody = document.getElementById('messagesTableBody');
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:2rem"><div class="spinner" style="margin:0 auto"></div></td></tr>';
+
+    try {
+      const res = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+      const data = await res.json();
+      document.getElementById('messagesCount').textContent = data.pagination.total;
+
+      if (!data.data.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:3rem; color:var(--gray-400)"><i class="bi bi-envelope" style="font-size:2rem; display:block; margin-bottom:.5rem"></i>${filterUnread ? 'No unread messages!' : 'No messages yet'}</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.data.map(m => `
+        <tr style="${!m.is_read ? 'font-weight:600; background:#fffbeb' : ''}">
+          <td>${m.name}</td>
+          <td style="font-size:.8rem">${m.email}</td>
+          <td>${m.subject}</td>
+          <td style="font-size:.8rem; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${m.message}</td>
+          <td style="font-size:.8rem">${new Date(m.created_at).toLocaleDateString()}</td>
+          <td>${m.is_read ? '<span class="status-badge" style="background:#f1f5f9; color:#64748b">Read</span>' : '<span class="status-badge status-pending">Unread</span>'}</td>
+          <td style="text-align:right; white-space:nowrap">
+            <button class="btn btn-ghost btn-sm view-msg-btn" data-msg='${JSON.stringify(m).replace(/'/g, "&apos;")}' title="View"><i class="bi bi-eye"></i></button>
+            ${!m.is_read ? `<button class="btn btn-ghost btn-sm mark-read-btn" data-id="${m.id}" title="Mark Read" style="color:var(--success)"><i class="bi bi-check-lg"></i></button>` : ''}
+          </td>
+        </tr>`).join('');
+
+      // Pagination
+      const pg = document.getElementById('messagesPagination');
+      pg.innerHTML = '';
+      if (data.pagination.totalPages > 1) {
+        for (let i = 1; i <= data.pagination.totalPages; i++) pg.innerHTML += `<button class="page-btn ${i===page?'active':''}" onclick="loadMessages(${i})">${i}</button>`;
+      }
+
+      document.querySelectorAll('.view-msg-btn').forEach(btn => btn.addEventListener('click', function() {
+        viewMessage(JSON.parse(this.dataset.msg.replace(/&apos;/g, "'")));
+      }));
+      document.querySelectorAll('.mark-read-btn').forEach(btn => btn.addEventListener('click', () => markRead(btn.dataset.id)));
+    } catch (e) { console.error(e); }
+  }
+
+  async function markRead(id) {
+    await fetch(`/api/contact/${id}`, { method:'PUT', headers:{'Content-Type':'application/json', Authorization:'Bearer '+token}, body: JSON.stringify({ is_read: true }) });
+    loadMessages();
+  }
+
+  function viewMessage(m) {
+    markRead(m.id);
+    document.getElementById('messageModalBody').innerHTML = `
+      <div style="background:var(--gray-50); border-radius:var(--radius-md); padding:1.25rem; margin-bottom:1.25rem">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:.75rem">
+          <div><div style="font-size:.75rem; color:var(--gray-500); margin-bottom:.2rem">From</div><div style="font-weight:600">${m.name}</div></div>
+          <div><div style="font-size:.75rem; color:var(--gray-500); margin-bottom:.2rem">Email</div><div><a href="mailto:${m.email}" style="color:var(--info)">${m.email}</a></div></div>
+          ${m.phone ? `<div><div style="font-size:.75rem; color:var(--gray-500); margin-bottom:.2rem">Phone</div><div>${m.phone}</div></div>` : ''}
+          <div><div style="font-size:.75rem; color:var(--gray-500); margin-bottom:.2rem">Date</div><div>${new Date(m.created_at).toLocaleString()}</div></div>
+        </div>
+      </div>
+      <div style="margin-bottom:1.25rem">
+        <div style="font-size:.75rem; color:var(--gray-500); margin-bottom:.5rem">SUBJECT</div>
+        <h4>${m.subject}</h4>
+      </div>
+      <div style="margin-bottom:1.5rem">
+        <div style="font-size:.75rem; color:var(--gray-500); margin-bottom:.5rem">MESSAGE</div>
+        <div style="background:var(--gray-50); border-radius:var(--radius-md); padding:1rem; line-height:1.8; white-space:pre-wrap">${m.message}</div>
+      </div>
+      <div style="display:flex; gap:.75rem">
+        <a href="mailto:${m.email}?subject=Re: ${encodeURIComponent(m.subject)}" class="btn btn-primary btn-sm"><i class="bi bi-envelope"></i> Reply via Email</a>
+        ${m.phone ? `<a href="tel:${m.phone}" class="btn btn-secondary btn-sm"><i class="bi bi-telephone"></i> Call</a>` : ''}
+        <a href="https://wa.me/${m.phone?.replace(/\D/g,'')}" target="_blank" class="btn btn-sm" style="background:#25d366;color:#fff" ${!m.phone ? 'style="display:none"' : ''}><i class="bi bi-whatsapp"></i> WhatsApp</a>
+      </div>
+    `;
+    document.getElementById('messageModal').classList.add('open');
+  }
+
+  loadMessages();
+</script>
+</body>
+</html>

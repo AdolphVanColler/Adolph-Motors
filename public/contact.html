@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Adolph Motors. Book a test drive, enquire about a vehicle, or visit our showroom in Sandton, Gauteng.">
+  <title>Contact Us | Adolph Motors</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<nav class="navbar solid" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><div class="logo-icon">A</div><div class="logo-text">Adolph Motors<span>Your Journey Starts Here</span></div></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/inventory.html">Inventory</a>
+      <a href="/finance.html">Finance</a>
+      <a href="/trade-in.html">Trade-In</a>
+      <a href="/compare.html">Compare</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html" class="active">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/inventory.html" class="btn btn-primary btn-sm">Browse Cars</a>
+      <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/"><i class="bi bi-house"></i> Home</a>
+  <a href="/inventory.html"><i class="bi bi-grid-3x3-gap"></i> Inventory</a>
+  <a href="/finance.html"><i class="bi bi-calculator"></i> Finance</a>
+  <a href="/trade-in.html"><i class="bi bi-arrow-left-right"></i> Trade-In</a>
+  <a href="/about.html"><i class="bi bi-info-circle"></i> About</a>
+  <a href="/contact.html"><i class="bi bi-envelope"></i> Contact</a>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb"><a href="/">Home</a><span><i class="bi bi-chevron-right"></i></span><span class="current">Contact</span></nav>
+    <h1>Get in Touch</h1>
+    <p>We're here to help â€” 6 days a week</p>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div style="background:var(--white); border-bottom:1px solid var(--gray-200); padding:1.5rem 1.25rem">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem">
+      <a href="tel:+27110000000" style="display:flex; align-items:center; gap:.75rem; padding:1rem; background:var(--gray-50); border-radius:var(--radius-lg); border:1px solid var(--gray-200); transition:var(--transition); text-decoration:none" class="hover-lift">
+        <div style="width:40px;height:40px;background:var(--accent-light);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:1.1rem;flex-shrink:0"><i class="bi bi-telephone-fill"></i></div>
+        <div><div style="font-weight:600; font-size:.875rem; color:var(--primary)">Call Us</div><div style="font-size:.775rem; color:var(--gray-500)">+27 11 000 0000</div></div>
+      </a>
+      <a href="https://wa.me/27110000000" target="_blank" style="display:flex; align-items:center; gap:.75rem; padding:1rem; background:var(--gray-50); border-radius:var(--radius-lg); border:1px solid var(--gray-200); transition:var(--transition)">
+        <div style="width:40px;height:40px;background:#d1fae5;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:#16a34a;font-size:1.1rem;flex-shrink:0"><i class="bi bi-whatsapp"></i></div>
+        <div><div style="font-weight:600; font-size:.875rem; color:var(--primary)">WhatsApp</div><div style="font-size:.775rem; color:var(--gray-500)">Chat Now</div></div>
+      </a>
+      <a href="mailto:info@adolphmotors.co.za" style="display:flex; align-items:center; gap:.75rem; padding:1rem; background:var(--gray-50); border-radius:var(--radius-lg); border:1px solid var(--gray-200); transition:var(--transition)">
+        <div style="width:40px;height:40px;background:var(--info-light);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--info);font-size:1.1rem;flex-shrink:0"><i class="bi bi-envelope-fill"></i></div>
+        <div><div style="font-weight:600; font-size:.875rem; color:var(--primary)">Email Us</div><div style="font-size:.775rem; color:var(--gray-500)">info@adolphmotors.co.za</div></div>
+      </a>
+      <a href="#directions" style="display:flex; align-items:center; gap:.75rem; padding:1rem; background:var(--gray-50); border-radius:var(--radius-lg); border:1px solid var(--gray-200); transition:var(--transition)">
+        <div style="width:40px;height:40px;background:var(--gold-light);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.1rem;flex-shrink:0"><i class="bi bi-geo-alt-fill"></i></div>
+        <div><div style="font-weight:600; font-size:.875rem; color:var(--primary)">Visit Us</div><div style="font-size:.775rem; color:var(--gray-500)">Sandton, Gauteng</div></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="book">
+  <div class="container">
+    <div class="contact-grid">
+      <!-- Info -->
+      <div>
+        <div class="contact-info-card">
+          <h3>Contact Information</h3>
+          <p class="subtitle">Visit our showroom or reach out through any of the channels below. Our team is available 6 days a week to assist you.</p>
+
+          <div class="contact-detail">
+            <div class="contact-detail-icon"><i class="bi bi-geo-alt-fill"></i></div>
+            <div class="contact-detail-text">
+              <div class="label">Physical Address</div>
+              <div class="value">123 Motoring Boulevard<br>Sandton, Gauteng, 2196<br>South Africa</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon"><i class="bi bi-telephone-fill"></i></div>
+            <div class="contact-detail-text">
+              <div class="label">Phone Number</div>
+              <div class="value"><a href="tel:+27110000000" style="color:#fff">+27 11 000 0000</a></div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon"><i class="bi bi-whatsapp"></i></div>
+            <div class="contact-detail-text">
+              <div class="label">WhatsApp</div>
+              <div class="value"><a href="https://wa.me/27820000000" target="_blank" style="color:#fff">+27 82 000 0000</a></div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon"><i class="bi bi-envelope-fill"></i></div>
+            <div class="contact-detail-text">
+              <div class="label">Email Address</div>
+              <div class="value"><a href="mailto:info@adolphmotors.co.za" style="color:#fff">info@adolphmotors.co.za</a></div>
+            </div>
+          </div>
+
+          <div class="hours-grid">
+            <h6 style="color:rgba(255,255,255,.7); font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; margin-bottom:.75rem"><i class="bi bi-clock"></i> Trading Hours</h6>
+            <div class="hours-row"><span class="day">Monday â€“ Friday</span><span class="time">08:00 â€“ 18:00</span></div>
+            <div class="hours-row"><span class="day">Saturday</span><span class="time">08:00 â€“ 16:00</span></div>
+            <div class="hours-row closed"><span class="day">Sunday</span><span class="time">Closed</span></div>
+            <div class="hours-row"><span class="day">Public Holidays</span><span class="time">09:00 â€“ 14:00</span></div>
+          </div>
+
+          <div style="margin-top:1.5rem; display:flex; gap:.5rem">
+            <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="social-btn"><i class="bi bi-whatsapp"></i></a>
+            <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div>
+        <h2 style="margin-bottom:.5rem">Send Us a Message</h2>
+        <p style="margin-bottom:2rem">Have a question about a specific vehicle, want to arrange a test drive, or just want to say hello? Fill in the form and we'll get back to you within 24 hours.</p>
+
+        <div class="calc-card" id="contactFormCard">
+          <form id="contactForm">
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">Your Name <span class="req">*</span></label><input type="text" class="form-control" id="cName" required placeholder="John Smith"></div>
+              <div class="form-group"><label class="form-label">Phone Number</label><input type="tel" class="form-control" id="cPhone" placeholder="+27 82 000 0000"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Email Address <span class="req">*</span></label><input type="email" class="form-control" id="cEmail" required placeholder="john@example.com"></div>
+            <div class="form-group">
+              <label class="form-label">Subject <span class="req">*</span></label>
+              <select class="form-control" id="cSubject" required>
+                <option value="">Select a subject</option>
+                <option>Vehicle Enquiry</option>
+                <option>Book a Test Drive</option>
+                <option>Book a Viewing</option>
+                <option>Finance Enquiry</option>
+                <option>Trade-In Enquiry</option>
+                <option>After-Sales / Warranty</option>
+                <option>General Enquiry</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Message <span class="req">*</span></label><textarea class="form-control" id="cMessage" rows="5" required placeholder="How can we help you?"></textarea></div>
+            <div id="contactAlert"></div>
+            <button type="submit" class="btn btn-primary btn-full btn-lg" id="contactSubmitBtn">
+              <i class="bi bi-send"></i> Send Message
+            </button>
+          </form>
+        </div>
+
+        <div id="contactSuccess" style="display:none; text-align:center; padding:3rem 2rem; background:var(--white); border-radius:var(--radius-xl); border:1px solid var(--gray-200)">
+          <div style="font-size:4rem; margin-bottom:1rem">âœ…</div>
+          <h3>Message Sent!</h3>
+          <p style="margin-bottom:1.5rem">Thank you for reaching out. We'll respond within 24 hours.</p>
+          <button onclick="document.getElementById('contactSuccess').style.display='none'; document.getElementById('contactFormCard').style.display='block'; document.getElementById('contactForm').reset()" class="btn btn-secondary">Send Another Message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Map Placeholder -->
+<div id="directions" style="background:var(--gray-200); height:350px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden">
+  <div style="text-align:center; z-index:1">
+    <div style="font-size:3rem; margin-bottom:.5rem"><i class="bi bi-geo-alt-fill" style="color:var(--accent)"></i></div>
+    <h4>Find Us on the Map</h4>
+    <p style="color:var(--gray-600)">123 Motoring Boulevard, Sandton, Gauteng</p>
+    <a href="https://maps.google.com?q=Sandton+Gauteng+South+Africa" target="_blank" class="btn btn-primary mt-4">
+      <i class="bi bi-map"></i> Open in Google Maps
+    </a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>Â© 2026 Adolph Motors. All rights reserved.</p>
+      <div class="footer-bottom-links"><a href="/inventory.html">Browse Cars</a><a href="/about.html">About Us</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script>
+  document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('contactSubmitBtn');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0 auto"></div>';
+
+    const data = {
+      name: document.getElementById('cName').value,
+      email: document.getElementById('cEmail').value,
+      phone: document.getElementById('cPhone').value,
+      subject: document.getElementById('cSubject').value,
+      message: document.getElementById('cMessage').value,
+    };
+
+    try {
+      const res = await fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+      const result = await res.json();
+      if (result.success) {
+        document.getElementById('contactFormCard').style.display = 'none';
+        document.getElementById('contactSuccess').style.display = 'block';
+        showToast('Message sent successfully!', 'success');
+      } else {
+        document.getElementById('contactAlert').innerHTML = `<div class="alert alert-error"><i class="bi bi-exclamation-circle"></i>${result.error}</div>`;
+        btn.disabled = false; btn.innerHTML = '<i class="bi bi-send"></i> Send Message';
+      }
+    } catch { document.getElementById('contactAlert').innerHTML = `<div class="alert alert-error"><i class="bi bi-exclamation-circle"></i>Network error. Please try again.</div>`; btn.disabled = false; btn.innerHTML = '<i class="bi bi-send"></i> Send Message'; }
+  });
+</script>
+</body>
+</html>
+

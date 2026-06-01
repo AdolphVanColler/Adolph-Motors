@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View vehicle details, specs, and book a test drive at Adolph Motors.">
+  <title>Vehicle Details | Adolph Motors</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<nav class="navbar solid" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">A</div>
+      <div class="logo-text">Adolph Motors<span>Your Journey Starts Here</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/inventory.html" class="active">Inventory</a>
+      <a href="/finance.html">Finance</a>
+      <a href="/trade-in.html">Trade-In</a>
+      <a href="/compare.html">Compare</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/inventory.html?wishlist=true" class="nav-wishlist-btn">
+        <i class="bi bi-heart"></i>
+        <span class="wishlist-badge hidden" id="wishlistCount">0</span>
+      </a>
+      <a href="/contact.html#book" class="btn btn-primary btn-sm">Book Test Drive</a>
+      <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/"><i class="bi bi-house"></i> Home</a>
+  <a href="/inventory.html"><i class="bi bi-grid-3x3-gap"></i> All Vehicles</a>
+  <a href="/finance.html"><i class="bi bi-calculator"></i> Finance</a>
+  <a href="/trade-in.html"><i class="bi bi-arrow-left-right"></i> Trade-In</a>
+  <a href="/about.html"><i class="bi bi-info-circle"></i> About</a>
+  <a href="/contact.html"><i class="bi bi-envelope"></i> Contact</a>
+</div>
+
+<!-- Loading State -->
+<div id="loadingState" style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding-top:80px">
+  <div style="text-align:center"><div class="spinner" style="margin:0 auto 1rem"></div><p>Loading vehicle details...</p></div>
+</div>
+
+<!-- Car Detail Content (hidden until loaded) -->
+<div id="carDetailContent" style="display:none; padding-top:80px">
+  <!-- Breadcrumb -->
+  <div style="background:var(--gray-100); padding:.875rem 1.25rem; border-bottom:1px solid var(--gray-200)">
+    <div class="container">
+      <nav class="breadcrumb" style="justify-content:flex-start">
+        <a href="/">Home</a>
+        <span><i class="bi bi-chevron-right"></i></span>
+        <a href="/inventory.html">Inventory</a>
+        <span><i class="bi bi-chevron-right"></i></span>
+        <span class="current" id="breadcrumbCar">Vehicle Details</span>
+      </nav>
+    </div>
+  </div>
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="car-detail-grid">
+        <!-- Left: Gallery & Info -->
+        <div>
+          <!-- Gallery -->
+          <div class="car-gallery" style="margin-bottom:2rem">
+            <div class="gallery-main" id="galleryMain">
+              <img src="" alt="Vehicle" id="mainGalleryImg">
+            </div>
+            <div class="gallery-thumbs" id="galleryThumbs"></div>
+            <button class="gallery-nav gallery-prev" id="galleryPrev"><i class="bi bi-chevron-left"></i></button>
+            <button class="gallery-nav gallery-next" id="galleryNext"><i class="bi bi-chevron-right"></i></button>
+          </div>
+
+          <!-- Specs -->
+          <div class="car-info-card" style="margin-bottom:1.5rem">
+            <h4 style="margin-bottom:1.25rem"><i class="bi bi-gear" style="color:var(--accent)"></i> Vehicle Specifications</h4>
+            <div class="car-specs-grid" id="specsGrid"></div>
+          </div>
+
+          <!-- Features -->
+          <div class="car-info-card" style="margin-bottom:1.5rem">
+            <h4 style="margin-bottom:1.25rem"><i class="bi bi-star" style="color:var(--accent)"></i> Features & Equipment</h4>
+            <div class="car-features-list" id="featuresList"></div>
+          </div>
+
+          <!-- Description -->
+          <div class="car-info-card">
+            <h4 style="margin-bottom:1rem"><i class="bi bi-file-text" style="color:var(--accent)"></i> About This Vehicle</h4>
+            <p id="carDescription" style="line-height:1.8; color:var(--gray-600)"></p>
+          </div>
+        </div>
+
+        <!-- Right: Pricing & CTAs -->
+        <div class="car-detail-sticky">
+          <div class="car-info-card">
+            <div class="car-badge-row" id="carBadgeRow"></div>
+            <div class="car-make" id="detailMake"></div>
+            <h2 class="car-title" id="detailTitle"></h2>
+            <p class="car-subtitle" id="detailVariant"></p>
+
+            <div class="car-price-display">
+              <div class="price-main"><span class="currency">R</span> <span id="detailPrice"></span></div>
+              <div class="price-monthly">≈ R <span id="detailMonthly"></span>/month over 72 months</div>
+            </div>
+
+            <div style="display:flex; gap:1rem; margin-bottom:1.25rem; flex-wrap:wrap">
+              <div style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--gray-600)">
+                <i class="bi bi-speedometer2" style="color:var(--accent)"></i> <span id="detailMileage"></span>
+              </div>
+              <div style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--gray-600)">
+                <i class="bi bi-calendar3" style="color:var(--accent)"></i> <span id="detailYear"></span>
+              </div>
+              <div style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--gray-600)">
+                <i class="bi bi-fuel-pump" style="color:var(--accent)"></i> <span id="detailFuel"></span>
+              </div>
+              <div style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--gray-600)">
+                <i class="bi bi-gear-wide" style="color:var(--accent)"></i> <span id="detailTransmission"></span>
+              </div>
+            </div>
+
+            <div class="car-action-buttons">
+              <button class="btn btn-primary btn-full btn-lg" id="testDriveBtn">
+                <i class="bi bi-car-front"></i> Book Test Drive
+              </button>
+              <div class="car-action-row">
+                <button class="btn btn-secondary btn-full" id="viewingBtn">
+                  <i class="bi bi-eye"></i> Book Viewing
+                </button>
+                <button class="btn btn-outline btn-full" id="financeBtn">
+                  <i class="bi bi-bank"></i> Apply for Finance
+                </button>
+              </div>
+              <button class="btn btn-whatsapp btn-full" id="whatsappBtn">
+                <i class="bi bi-whatsapp"></i> WhatsApp Enquiry
+              </button>
+              <button class="btn btn-ghost btn-full" id="wishlistBtn">
+                <i class="bi bi-heart"></i> <span id="wishlistBtnText">Save to Wishlist</span>
+              </button>
+            </div>
+
+            <div style="margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--gray-100)">
+              <div style="display:flex; flex-direction:column; gap:.5rem">
+                <div style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--gray-600)">
+                  <i class="bi bi-shield-check" style="color:var(--success)"></i> 3-Month Mechanical Warranty
+                </div>
+                <div style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--gray-600)">
+                  <i class="bi bi-wrench" style="color:var(--success)"></i> Full Service at Handover
+                </div>
+                <div style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--gray-600)">
+                  <i class="bi bi-file-check" style="color:var(--success)"></i> Roadworthy Certificate Included
+                </div>
+                <div style="display:flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--gray-600)">
+                  <i class="bi bi-tag" style="color:var(--success)"></i> Transparent All-Inclusive Pricing
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:1rem; background:var(--gray-50); border-radius:var(--radius-md); padding:.875rem; font-size:.8rem; color:var(--gray-500)">
+              <strong style="color:var(--gray-700)">Stock No:</strong> <span id="detailStock"></span> &nbsp;|&nbsp;
+              <strong style="color:var(--gray-700)">Views:</strong> <span id="detailViews"></span>
+            </div>
+          </div>
+
+          <!-- Contact Card -->
+          <div class="car-info-card">
+            <h5 style="margin-bottom:1rem"><i class="bi bi-person-lines-fill" style="color:var(--accent)"></i> Contact a Specialist</h5>
+            <div style="display:flex; align-items:center; gap:.75rem; margin-bottom:1rem">
+              <div style="width:44px;height:44px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">AP</div>
+              <div>
+                <div style="font-weight:600; color:var(--primary); font-size:.9rem">Adolph Motors Sales Team</div>
+                <div style="font-size:.8rem; color:var(--gray-500)">Available Mon–Sat, 8am–6pm</div>
+              </div>
+            </div>
+            <a href="tel:+27110000000" class="btn btn-secondary btn-full btn-sm" style="margin-bottom:.5rem">
+              <i class="bi bi-telephone"></i> +27 11 000 0000
+            </a>
+            <a href="mailto:info@adolphmotors.co.za" class="btn btn-ghost btn-full btn-sm">
+              <i class="bi bi-envelope"></i> Email Us
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Similar Vehicles -->
+      <div style="margin-top:3rem" id="similarSection">
+        <div class="section-header" style="text-align:left; margin-bottom:1.5rem">
+          <h3>Similar Vehicles</h3>
+          <p>You might also be interested in these</p>
+        </div>
+        <div class="cars-grid" id="similarCars" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Error State -->
+<div id="errorState" style="display:none; min-height:60vh; align-items:center; justify-content:center; padding-top:80px">
+  <div class="empty-state">
+    <i class="bi bi-exclamation-circle" style="font-size:4rem; color:var(--accent)"></i>
+    <h3 style="margin-bottom:.5rem">Vehicle Not Found</h3>
+    <p>This vehicle may no longer be available.</p>
+    <a href="/inventory.html" class="btn btn-primary mt-4">Browse All Vehicles</a>
+  </div>
+</div>
+
+<!-- Test Drive Modal -->
+<div class="modal-overlay" id="testDriveModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="bi bi-car-front" style="color:var(--accent)"></i> Book a Test Drive</h3>
+      <button class="modal-close" onclick="closeModal('testDriveModal')"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="tdCarInfo" style="background:var(--gray-50); border-radius:var(--radius-md); padding:.875rem; margin-bottom:1.25rem; font-size:.875rem; color:var(--gray-700)"></div>
+      <form id="testDriveForm">
+        <div class="form-grid-2">
+          <div class="form-group"><label class="form-label">First Name <span class="req">*</span></label><input type="text" class="form-control" id="tdFirstName" required></div>
+          <div class="form-group"><label class="form-label">Last Name <span class="req">*</span></label><input type="text" class="form-control" id="tdLastName" required></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email <span class="req">*</span></label><input type="email" class="form-control" id="tdEmail" required></div>
+        <div class="form-group"><label class="form-label">Phone <span class="req">*</span></label><input type="tel" class="form-control" id="tdPhone" required placeholder="+27 82 000 0000"></div>
+        <div class="form-grid-2">
+          <div class="form-group"><label class="form-label">Preferred Date <span class="req">*</span></label><input type="date" class="form-control" id="tdDate" required></div>
+          <div class="form-group"><label class="form-label">Preferred Time <span class="req">*</span></label>
+            <select class="form-control" id="tdTime" required>
+              <option value="">Select time</option>
+              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
+              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
+              <option>16:00</option><option>17:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Additional Notes</label><textarea class="form-control" id="tdMessage" rows="3" placeholder="Any special requests or questions?"></textarea></div>
+        <div id="tdAlert"></div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg"><i class="bi bi-calendar-check"></i> Confirm Test Drive</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Viewing Modal -->
+<div class="modal-overlay" id="viewingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="bi bi-eye" style="color:var(--accent)"></i> Book a Viewing</h3>
+      <button class="modal-close" onclick="closeModal('viewingModal')"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="vwCarInfo" style="background:var(--gray-50); border-radius:var(--radius-md); padding:.875rem; margin-bottom:1.25rem; font-size:.875rem; color:var(--gray-700)"></div>
+      <form id="viewingForm">
+        <div class="form-grid-2">
+          <div class="form-group"><label class="form-label">First Name <span class="req">*</span></label><input type="text" class="form-control" id="vwFirstName" required></div>
+          <div class="form-group"><label class="form-label">Last Name <span class="req">*</span></label><input type="text" class="form-control" id="vwLastName" required></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email <span class="req">*</span></label><input type="email" class="form-control" id="vwEmail" required></div>
+        <div class="form-group"><label class="form-label">Phone <span class="req">*</span></label><input type="tel" class="form-control" id="vwPhone" required placeholder="+27 82 000 0000"></div>
+        <div class="form-grid-2">
+          <div class="form-group"><label class="form-label">Preferred Date <span class="req">*</span></label><input type="date" class="form-control" id="vwDate" required></div>
+          <div class="form-group"><label class="form-label">Preferred Time <span class="req">*</span></label>
+            <select class="form-control" id="vwTime" required>
+              <option value="">Select time</option>
+              <option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option>
+              <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
+              <option>16:00</option><option>17:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="vwMessage" rows="3" placeholder="What would you like to know?"></textarea></div>
+        <div id="vwAlert"></div>
+        <button type="submit" class="btn btn-secondary btn-full btn-lg"><i class="bi bi-calendar-check"></i> Confirm Viewing</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Finance Modal -->
+<div class="modal-overlay" id="financeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><i class="bi bi-bank" style="color:var(--accent)"></i> Apply for Finance</h3>
+      <button class="modal-close" onclick="closeModal('financeModal')"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="fiCarInfo" style="background:var(--gray-50); border-radius:var(--radius-md); padding:.875rem; margin-bottom:1.25rem; font-size:.875rem; color:var(--gray-700)"></div>
+      <form id="financeModalForm">
+        <div class="form-grid-2">
+          <div class="form-group"><label class="form-label">First Name <span class="req">*</span></label><input type="text" class="form-control" id="fiFirstName" required></div>
+          <div class="form-group"><label class="form-label">Last Name <span class="req">*</span></label><input type="text" class="form-control" id="fiLastName" required></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email <span class="req">*</span></label><input type="email" class="form-control" id="fiEmail" required></div>
+        <div class="form-group"><label class="form-label">Phone <span class="req">*</span></label><input type="tel" class="form-control" id="fiPhone" required placeholder="+27 82 000 0000"></div>
+        <div class="form-group">
+          <label class="form-label">Employment Type <span class="req">*</span></label>
+          <select class="form-control" id="fiEmployment" required>
+            <option value="">Select...</option>
+            <option>Permanently Employed</option>
+            <option>Self-Employed</option>
+            <option>Contract Worker</option>
+            <option>Retired</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Gross Monthly Income (R) <span class="req">*</span></label><input type="number" class="form-control" id="fiIncome" required placeholder="e.g. 35000" min="1"></div>
+        <div class="form-grid-2">
+          <div class="form-group"><label class="form-label">Deposit Amount (R)</label><input type="number" class="form-control" id="fiDeposit" placeholder="e.g. 50000" min="0"></div>
+          <div class="form-group"><label class="form-label">Loan Term</label>
+            <select class="form-control" id="fiTerm">
+              <option value="48">48 months</option>
+              <option value="60">60 months</option>
+              <option value="72" selected>72 months</option>
+              <option value="84">84 months</option>
+            </select>
+          </div>
+        </div>
+        <div id="fiAlert"></div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg"><i class="bi bi-send"></i> Submit Application</button>
+        <p style="font-size:.75rem; color:var(--gray-500); text-align:center; margin-top:.75rem">Your information is kept private and used only for this application.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 Adolph Motors. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="/inventory.html">Browse All Vehicles</a>
+        <a href="/contact.html">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script src="/js/car-detail.js"></script>
+</body>
+</html>

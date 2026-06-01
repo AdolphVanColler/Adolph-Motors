@@ -1,0 +1,450 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Adolph Motors - Premium used and new vehicles. Test drives, finance, trade-ins, and more. Your journey starts here.">
+  <meta name="keywords" content="car dealership, used cars, new cars, Toyota, BMW, Mercedes, Ford, Volkswagen, test drive, finance, trade-in">
+  <meta property="og:title" content="Adolph Motors | Your Journey Starts Here">
+  <meta property="og:description" content="Browse our premium selection of vehicles. Book a test drive today.">
+  <meta property="og:type" content="website">
+  <title>Adolph Motors | Your Journey Starts Here</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Navigation -->
+<nav class="navbar transparent" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">A</div>
+      <div class="logo-text">Adolph Motors<span>Your Journey Starts Here</span></div>
+    </a>
+
+    <div class="nav-links">
+      <a href="/" class="active">Home</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger">Inventory <i class="bi bi-chevron-down" style="font-size:.7rem"></i></button>
+        <div class="nav-dropdown-menu">
+          <a href="/inventory.html"><i class="bi bi-grid-3x3-gap"></i> All Vehicles</a>
+          <a href="/inventory.html?sort=created_at&order=DESC"><i class="bi bi-stars"></i> New Arrivals</a>
+          <a href="/inventory.html?fuel_type=Hybrid"><i class="bi bi-lightning-charge"></i> Hybrid & Electric</a>
+          <a href="/inventory.html?featured=true"><i class="bi bi-fire"></i> Hot Deals</a>
+        </div>
+      </div>
+      <a href="/finance.html">Finance</a>
+      <a href="/trade-in.html">Trade-In</a>
+      <a href="/compare.html">Compare</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+
+    <div class="nav-actions">
+      <a href="/inventory.html?wishlist=true" class="nav-wishlist-btn" title="Wishlist">
+        <i class="bi bi-heart"></i>
+        <span class="wishlist-badge hidden" id="wishlistCount">0</span>
+      </a>
+      <a href="/inventory.html" class="btn btn-primary btn-sm">Browse Cars</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/"><i class="bi bi-house"></i> Home</a>
+  <a href="/inventory.html"><i class="bi bi-grid-3x3-gap"></i> All Vehicles</a>
+  <a href="/inventory.html?featured=true"><i class="bi bi-fire"></i> Hot Deals</a>
+  <div class="mobile-divider"></div>
+  <a href="/finance.html"><i class="bi bi-calculator"></i> Finance</a>
+  <a href="/trade-in.html"><i class="bi bi-arrow-left-right"></i> Trade-In</a>
+  <a href="/compare.html"><i class="bi bi-layout-split"></i> Compare Vehicles</a>
+  <div class="mobile-divider"></div>
+  <a href="/about.html"><i class="bi bi-info-circle"></i> About Us</a>
+  <a href="/contact.html"><i class="bi bi-envelope"></i> Contact</a>
+  <div class="mobile-divider"></div>
+  <a href="/inventory.html" class="btn btn-primary btn-full mt-4">Browse All Cars</a>
+</div>
+
+<!-- Hero Section -->
+<section class="hero" id="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-content">
+    <div class="hero-inner">
+      <div class="hero-text fade-up">
+        <div class="badge"><i class="bi bi-shield-check"></i> Certified Pre-Owned Vehicles</div>
+        <h1>Find Your<br><span>Perfect</span> Drive</h1>
+        <p class="subtitle">Browse our hand-picked selection of premium vehicles. Every car inspected, every deal transparent. Your dream car is one click away.</p>
+        <div class="hero-cta">
+          <a href="/inventory.html" class="btn btn-primary btn-xl">
+            <i class="bi bi-search"></i> Browse Inventory
+          </a>
+          <a href="/contact.html" class="btn btn-outline-white btn-xl">
+            <i class="bi bi-telephone"></i> Call Us Now
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num" id="statCars">120<span>+</span></div>
+            <div class="label">Vehicles in Stock</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">15<span>+</span></div>
+            <div class="label">Years Experience</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">4.9<span>★</span></div>
+            <div class="label">Customer Rating</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">2500<span>+</span></div>
+            <div class="label">Happy Customers</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-search fade-up" style="animation-delay:.2s">
+        <h3><i class="bi bi-search" style="color:var(--accent)"></i> Quick Vehicle Search</h3>
+        <form id="heroSearchForm">
+          <div class="hero-search-grid">
+            <div class="hero-search-field">
+              <label>Make</label>
+              <select id="heroMake" name="make">
+                <option value="">Any Make</option>
+              </select>
+            </div>
+            <div class="hero-search-field">
+              <label>Body Type</label>
+              <select id="heroBodyType" name="body_type">
+                <option value="">Any Type</option>
+                <option>Sedan</option>
+                <option>SUV</option>
+                <option>Hatchback</option>
+                <option>Bakkie</option>
+                <option>Coupe</option>
+                <option>MPV</option>
+              </select>
+            </div>
+            <div class="hero-search-field">
+              <label>Max Price (R)</label>
+              <select id="heroMaxPrice" name="price_max">
+                <option value="">Any Price</option>
+                <option value="300000">R 300,000</option>
+                <option value="500000">R 500,000</option>
+                <option value="700000">R 700,000</option>
+                <option value="900000">R 900,000</option>
+                <option value="1200000">R 1,200,000</option>
+              </select>
+            </div>
+            <div class="hero-search-field">
+              <label>Transmission</label>
+              <select id="heroTransmission" name="transmission">
+                <option value="">Any</option>
+                <option>Automatic</option>
+                <option>Manual</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top:.5rem">
+            <i class="bi bi-search"></i> Search Vehicles
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust Bar -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <div class="trust-item"><i class="bi bi-shield-check"></i> Multi-Point Inspection</div>
+    <div class="trust-item"><i class="bi bi-award"></i> Certified Vehicles</div>
+    <div class="trust-item"><i class="bi bi-calendar-check"></i> Easy Test Drives</div>
+    <div class="trust-item"><i class="bi bi-bank"></i> Finance Available</div>
+    <div class="trust-item"><i class="bi bi-arrow-left-right"></i> Trade-Ins Welcome</div>
+    <div class="trust-item"><i class="bi bi-headset"></i> 7-Day Support</div>
+  </div>
+</div>
+
+<!-- Featured Cars -->
+<section class="section" id="featured">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="eyebrow"><i class="bi bi-fire"></i> Top Picks</div>
+      <h2>Featured Vehicles</h2>
+      <p>Hand-selected vehicles offering the best value, condition, and features for our discerning customers.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="cars-grid" id="featuredCarsGrid">
+      <!-- Loaded via JS -->
+      <div class="loading-overlay" style="grid-column:1/-1"><div class="spinner"></div></div>
+    </div>
+    <div style="text-align:center; margin-top:2.5rem" class="fade-up">
+      <a href="/inventory.html" class="btn btn-secondary btn-lg">
+        <i class="bi bi-grid-3x3-gap"></i> View All Vehicles
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="section why-us">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="eyebrow"><i class="bi bi-star"></i> Why Adolph Motors</div>
+      <h2>The Adolph Motors Advantage</h2>
+      <p>We go beyond just selling cars. We deliver a complete, transparent, and trustworthy experience from first click to final handover.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-icon"><i class="bi bi-clipboard2-check"></i></div>
+        <h4>150-Point Inspection</h4>
+        <p>Every vehicle undergoes a rigorous 150-point mechanical, electrical, and cosmetic inspection before it joins our showroom.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon"><i class="bi bi-shield-lock"></i></div>
+        <h4>Transparent Pricing</h4>
+        <p>No hidden fees, no negotiation games. Every car's price is fixed, fair, and fully inclusive. What you see is what you pay.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon"><i class="bi bi-car-front"></i></div>
+        <h4>Test Drive Anytime</h4>
+        <p>Book a test drive online in minutes. We're open 6 days a week, and even offer after-hours viewings by appointment.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon"><i class="bi bi-bank2"></i></div>
+        <h4>Flexible Finance</h4>
+        <p>We work with South Africa's leading banks to get you the best interest rate. From 48 to 84 months, we make it work for you.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon"><i class="bi bi-arrow-left-right"></i></div>
+        <h4>Best Trade-In Value</h4>
+        <p>Get a fair market valuation for your current vehicle. We'll handle all the paperwork and deduct it from your next purchase.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon"><i class="bi bi-patch-check"></i></div>
+        <h4>3-Month Warranty</h4>
+        <p>Every vehicle comes with a 3-month mechanical warranty and a full service at handover, so you drive away with confidence.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Finance Calculator Teaser -->
+<section class="section" style="background: var(--white)">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center" class="fade-up">
+      <div>
+        <div class="eyebrow" style="display:inline-flex; align-items:center; gap:.5rem; font-size:.8rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:.75rem"><i class="bi bi-calculator"></i> Finance Tools</div>
+        <h2 style="margin-bottom:1rem">Calculate Your<br>Monthly Payment</h2>
+        <p style="margin-bottom:1.5rem; font-size:1.05rem">Use our instant finance calculator to see your estimated monthly repayment. Adjust the vehicle price, deposit, and loan term to find what works for your budget.</p>
+        <ul style="display:flex; flex-direction:column; gap:.75rem; margin-bottom:2rem">
+          <li style="display:flex; align-items:center; gap:.75rem; font-size:.9rem; color:var(--gray-700)">
+            <span style="width:28px;height:28px;background:var(--accent-light);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0"><i class="bi bi-check-lg"></i></span>
+            Financing from leading South African banks
+          </li>
+          <li style="display:flex; align-items:center; gap:.75rem; font-size:.9rem; color:var(--gray-700)">
+            <span style="width:28px;height:28px;background:var(--accent-light);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0"><i class="bi bi-check-lg"></i></span>
+            Terms from 48 to 84 months
+          </li>
+          <li style="display:flex; align-items:center; gap:.75rem; font-size:.9rem; color:var(--gray-700)">
+            <span style="width:28px;height:28px;background:var(--accent-light);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0"><i class="bi bi-check-lg"></i></span>
+            Quick pre-approval within 2 hours
+          </li>
+        </ul>
+        <a href="/finance.html" class="btn btn-primary btn-lg">
+          <i class="bi bi-calculator"></i> Finance Calculator
+        </a>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%); border-radius:var(--radius-2xl); padding:2.5rem; color:#fff">
+        <h4 style="color:#fff; margin-bottom:1.5rem; font-size:1.1rem">Quick Estimate</h4>
+        <div style="margin-bottom:1.25rem">
+          <label style="font-size:.75rem; color:rgba(255,255,255,.6); text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:.5rem">Vehicle Price: <span id="quickPriceLabel" style="color:#fff; font-weight:700">R 600,000</span></label>
+          <input type="range" class="range-slider" id="quickPrice" min="100000" max="1500000" step="10000" value="600000">
+          <div class="range-labels"><span>R 100k</span><span>R 1.5M</span></div>
+        </div>
+        <div style="margin-bottom:1.25rem">
+          <label style="font-size:.75rem; color:rgba(255,255,255,.6); text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:.5rem">Deposit: <span id="quickDepositLabel" style="color:#fff; font-weight:700">R 60,000</span></label>
+          <input type="range" class="range-slider" id="quickDeposit" min="0" max="300000" step="5000" value="60000">
+          <div class="range-labels"><span>R 0</span><span>R 300k</span></div>
+        </div>
+        <div style="margin-bottom:1.75rem">
+          <label style="font-size:.75rem; color:rgba(255,255,255,.6); text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:.5rem">Loan Term: <span id="quickTermLabel" style="color:#fff; font-weight:700">72 months</span></label>
+          <input type="range" class="range-slider" id="quickTerm" min="48" max="84" step="12" value="72">
+          <div class="range-labels"><span>48mo</span><span>84mo</span></div>
+        </div>
+        <div style="background:rgba(255,255,255,.1); border-radius:var(--radius-lg); padding:1.25rem; text-align:center">
+          <div style="font-size:.75rem; color:rgba(255,255,255,.55); margin-bottom:.25rem">ESTIMATED MONTHLY PAYMENT</div>
+          <div style="font-size:2.8rem; font-weight:800; color:#fff; font-family:var(--font-heading)">R <span id="quickMonthly">8,850</span></div>
+          <div style="font-size:.75rem; color:rgba(255,255,255,.4); margin-top:.25rem">*Estimate only. Actual rate may vary.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Brands -->
+<section class="section brands">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="eyebrow"><i class="bi bi-grid"></i> Our Brands</div>
+      <h2>Brands We Stock</h2>
+      <p>From trusted everyday vehicles to premium performance cars, we stock a wide variety of top brands.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="brands-grid fade-up">
+      <a href="/inventory.html?make=Toyota" class="brand-item">Toyota</a>
+      <a href="/inventory.html?make=BMW" class="brand-item">BMW</a>
+      <a href="/inventory.html?make=Mercedes-Benz" class="brand-item">Mercedes</a>
+      <a href="/inventory.html?make=Volkswagen" class="brand-item">VW</a>
+      <a href="/inventory.html?make=Ford" class="brand-item">Ford</a>
+      <a href="/inventory.html?make=Audi" class="brand-item">Audi</a>
+      <a href="/inventory.html?make=Hyundai" class="brand-item">Hyundai</a>
+      <a href="/inventory.html?make=Kia" class="brand-item">Kia</a>
+      <a href="/inventory.html?make=Land+Rover" class="brand-item">Land Rover</a>
+      <a href="/inventory.html?make=Honda" class="brand-item">Honda</a>
+      <a href="/inventory.html?make=Nissan" class="brand-item">Nissan</a>
+      <a href="/inventory.html?make=Mazda" class="brand-item">Mazda</a>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section testimonials">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="eyebrow"><i class="bi bi-chat-quote"></i> Reviews</div>
+      <h2>What Our Customers Say</h2>
+      <p>Don't just take our word for it. Here's what our customers have to say about the Adolph Motors experience.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="testimonials-grid fade-up">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Bought my BMW 3 Series from Adolph Motors and the entire process was seamless. No pressure, great price, and they even delivered it to my door. Highly recommend!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">JM</div>
+          <div><div class="author-name">James Mthembu</div><div class="author-sub">Johannesburg — BMW 3 Series buyer</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Traded in my old Hilux and got a fantastic deal on a Fortuner. The trade-in valuation was fair and the finance was sorted in under 2 hours. Excellent service!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">SN</div>
+          <div><div class="author-name">Sipho Ndlovu</div><div class="author-sub">Pretoria — Toyota Fortuner buyer</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Very professional team. The car was exactly as described on the website. Booked my test drive online and they had everything ready when I arrived. 10/10!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">LV</div>
+          <div><div class="author-name">Lerato van Wyk</div><div class="author-sub">Cape Town — VW Golf GTI buyer</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Banner -->
+<div class="cta-banner">
+  <div class="container">
+    <h2>Ready to Find Your Dream Car?</h2>
+    <p>Browse our full inventory or book a test drive today. Our team is here to help you every step of the way.</p>
+    <div class="cta-buttons">
+      <a href="/inventory.html" class="btn btn-outline-white btn-xl">
+        <i class="bi bi-search"></i> Browse All Vehicles
+      </a>
+      <a href="/contact.html#book" class="btn btn-xl" style="background:#fff; color:var(--accent); font-weight:700">
+        <i class="bi bi-calendar-check"></i> Book a Test Drive
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Newsletter -->
+<div class="newsletter">
+  <div class="newsletter-inner">
+    <h3>Stay in the Loop</h3>
+    <p>Get notified about new arrivals, price drops, and exclusive deals before anyone else.</p>
+    <form class="newsletter-form" id="newsletterForm">
+      <input type="email" placeholder="Your email address" required id="newsletterEmail">
+      <button type="submit" class="btn btn-primary">Subscribe</button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo nav-logo">
+          <div class="logo-icon">A</div>
+          <div class="logo-text">Adolph Motors<span>Your Journey Starts Here</span></div>
+        </div>
+        <p>South Africa's trusted independent car dealership. Premium vehicles, transparent prices, exceptional service.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Quick Links</h5>
+        <div class="footer-links">
+          <a href="/inventory.html">Browse Vehicles</a>
+          <a href="/inventory.html?featured=true">Hot Deals</a>
+          <a href="/finance.html">Finance Calculator</a>
+          <a href="/trade-in.html">Trade-In Valuation</a>
+          <a href="/compare.html">Compare Cars</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <div class="footer-links">
+          <a href="/about.html">About Us</a>
+          <a href="/about.html#team">Our Team</a>
+          <a href="/contact.html">Contact Us</a>
+          <a href="/contact.html#book">Book Test Drive</a>
+          <a href="/admin">Admin Login</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Contact Info</h5>
+        <div class="footer-contact-item"><i class="bi bi-geo-alt-fill"></i><span>123 Motoring Boulevard<br>Sandton, Gauteng, 2196</span></div>
+        <div class="footer-contact-item"><i class="bi bi-telephone-fill"></i><span>+27 11 000 0000</span></div>
+        <div class="footer-contact-item"><i class="bi bi-envelope-fill"></i><span>info@adolphmotors.co.za</span></div>
+        <div class="footer-contact-item"><i class="bi bi-clock-fill"></i><span>Mon–Fri: 8am–6pm<br>Sat: 8am–4pm | Sun: Closed</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Adolph Motors. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script src="/js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Use Adolph Motors' finance calculator to estimate your monthly car payment and apply for vehicle finance.">
+  <title>Finance Calculator | Adolph Motors</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<nav class="navbar solid" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><div class="logo-icon">A</div><div class="logo-text">Adolph Motors<span>Your Journey Starts Here</span></div></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/inventory.html">Inventory</a>
+      <a href="/finance.html" class="active">Finance</a>
+      <a href="/trade-in.html">Trade-In</a>
+      <a href="/compare.html">Compare</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/inventory.html" class="btn btn-primary btn-sm">Browse Cars</a>
+      <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/"><i class="bi bi-house"></i> Home</a>
+  <a href="/inventory.html"><i class="bi bi-grid-3x3-gap"></i> Inventory</a>
+  <a href="/finance.html"><i class="bi bi-calculator"></i> Finance</a>
+  <a href="/trade-in.html"><i class="bi bi-arrow-left-right"></i> Trade-In</a>
+  <a href="/about.html"><i class="bi bi-info-circle"></i> About</a>
+  <a href="/contact.html"><i class="bi bi-envelope"></i> Contact</a>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb"><a href="/">Home</a><span><i class="bi bi-chevron-right"></i></span><span class="current">Finance Calculator</span></nav>
+    <h1>Finance Calculator</h1>
+    <p>Calculate your monthly payment and apply for vehicle finance</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start">
+      <!-- Calculator -->
+      <div>
+        <h2 style="margin-bottom:.5rem">Vehicle Finance Calculator</h2>
+        <p style="margin-bottom:2rem">Adjust the sliders to estimate your monthly payment. Our finance team works with SA's leading banks to get you the best rate.</p>
+
+        <div class="calc-card">
+          <div class="calc-result-card">
+            <div class="result-label">Estimated Monthly Payment</div>
+            <div class="calc-monthly">R <span id="monthlyPayment">0</span></div>
+            <div style="font-size:.8rem; color:rgba(255,255,255,.5); margin-top:.25rem">*Based on prime rate. Actual rate may vary.</div>
+            <div class="calc-breakdown">
+              <div class="calc-breakdown-item">
+                <div class="bi-label">Loan Amount</div>
+                <div class="bi-value">R <span id="loanAmount">0</span></div>
+              </div>
+              <div class="calc-breakdown-item">
+                <div class="bi-label">Total Interest</div>
+                <div class="bi-value">R <span id="totalInterest">0</span></div>
+              </div>
+              <div class="calc-breakdown-item">
+                <div class="bi-label">Total Repayment</div>
+                <div class="bi-value">R <span id="totalRepayment">0</span></div>
+              </div>
+              <div class="calc-breakdown-item">
+                <div class="bi-label">Effective Rate</div>
+                <div class="bi-value"><span id="effectiveRate">11.5</span>%</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Vehicle Price: <strong style="color:var(--primary)" id="priceLabel">R 600,000</strong></label>
+            <input type="range" class="range-slider" id="vehiclePrice" min="50000" max="2000000" step="10000" value="600000">
+            <div class="range-labels"><span>R 50k</span><span>R 2M</span></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Deposit Amount: <strong style="color:var(--primary)" id="depositLabel">R 60,000</strong></label>
+            <input type="range" class="range-slider" id="depositAmount" min="0" max="500000" step="5000" value="60000">
+            <div class="range-labels"><span>R 0</span><span>R 500k</span></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Loan Term: <strong style="color:var(--primary)" id="termLabel">72 months</strong></label>
+            <input type="range" class="range-slider" id="loanTerm" min="12" max="84" step="12" value="72">
+            <div class="range-labels"><span>12 months</span><span>84 months</span></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Interest Rate: <strong style="color:var(--primary)" id="rateLabel">11.50%</strong> per year</label>
+            <input type="range" class="range-slider" id="interestRate" min="9" max="20" step="0.25" value="11.5">
+            <div class="range-labels"><span>9%</span><span>20%</span></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0">
+            <label style="display:flex; align-items:center; gap:.5rem; font-size:.875rem; cursor:pointer">
+              <input type="checkbox" id="includeInitFee" style="accent-color:var(--accent)"> Include initiation fee (~R 1,207.50)
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem; background:var(--info-light); border:1px solid #bfdbfe; border-radius:var(--radius-md); padding:1rem; font-size:.825rem; color:#1e40af">
+          <strong><i class="bi bi-info-circle"></i> Disclaimer:</strong> This calculator provides an estimate only. Final interest rate and monthly repayment are subject to credit approval and may differ. Contact our finance team for a personalised quote.
+        </div>
+      </div>
+
+      <!-- Finance Application -->
+      <div>
+        <h2 style="margin-bottom:.5rem">Apply for Finance</h2>
+        <p style="margin-bottom:2rem">Submit your finance inquiry and our dedicated finance team will contact you within 2 business hours with a personalised offer.</p>
+
+        <div class="calc-card">
+          <div style="display:flex; gap:1rem; margin-bottom:1.75rem">
+            <div style="flex:1; background:var(--gray-50); border-radius:var(--radius-md); padding:1rem; text-align:center">
+              <div style="font-size:1.8rem; font-weight:800; color:var(--accent)">2h</div>
+              <div style="font-size:.75rem; color:var(--gray-500)">Response Time</div>
+            </div>
+            <div style="flex:1; background:var(--gray-50); border-radius:var(--radius-md); padding:1rem; text-align:center">
+              <div style="font-size:1.8rem; font-weight:800; color:var(--accent)">5+</div>
+              <div style="font-size:.75rem; color:var(--gray-500)">Bank Partners</div>
+            </div>
+            <div style="flex:1; background:var(--gray-50); border-radius:var(--radius-md); padding:1rem; text-align:center">
+              <div style="font-size:1.8rem; font-weight:800; color:var(--accent)">84</div>
+              <div style="font-size:.75rem; color:var(--gray-500)">Month Terms</div>
+            </div>
+          </div>
+
+          <form id="financeForm">
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">First Name <span class="req">*</span></label><input type="text" class="form-control" id="fiFirstName" required placeholder="John"></div>
+              <div class="form-group"><label class="form-label">Last Name <span class="req">*</span></label><input type="text" class="form-control" id="fiLastName" required placeholder="Smith"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Email Address <span class="req">*</span></label><input type="email" class="form-control" id="fiEmail" required placeholder="john@example.com"></div>
+            <div class="form-group"><label class="form-label">Phone Number <span class="req">*</span></label><input type="tel" class="form-control" id="fiPhone" required placeholder="+27 82 000 0000"></div>
+            <div class="form-group">
+              <label class="form-label">Employment Type <span class="req">*</span></label>
+              <select class="form-control" id="fiEmploymentType" required>
+                <option value="">Select employment type</option>
+                <option>Permanently Employed</option>
+                <option>Self-Employed</option>
+                <option>Contract Worker</option>
+                <option>Retired</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Employer / Business Name</label><input type="text" class="form-control" id="fiEmployer" placeholder="Company name"></div>
+            <div class="form-group"><label class="form-label">Gross Monthly Income (R) <span class="req">*</span></label><input type="number" class="form-control" id="fiMonthlyIncome" required placeholder="e.g. 45000" min="1"></div>
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">Deposit Available (R)</label><input type="number" class="form-control" id="fiDepositAmount" placeholder="e.g. 50000" min="0"></div>
+              <div class="form-group"><label class="form-label">Preferred Term</label>
+                <select class="form-control" id="fiLoanTerm">
+                  <option value="48">48 months</option>
+                  <option value="60">60 months</option>
+                  <option value="72" selected>72 months</option>
+                  <option value="84">84 months</option>
+                </select>
+              </div>
+            </div>
+            <div id="financeAlert"></div>
+            <button type="submit" class="btn btn-primary btn-full btn-lg">
+              <i class="bi bi-send"></i> Submit Finance Application
+            </button>
+            <p style="font-size:.75rem; color:var(--gray-500); text-align:center; margin-top:.75rem">
+              <i class="bi bi-lock"></i> Your information is confidential and secure.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Finance Benefits -->
+    <div style="margin-top:4rem">
+      <div class="section-header">
+        <div class="eyebrow"><i class="bi bi-bank2"></i> Our Partners</div>
+        <h2>Why Finance Through Adolph Motors?</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="why-grid">
+        <div class="why-card" style="background:var(--white); border:1px solid var(--gray-200)">
+          <div class="why-icon" style="background:var(--accent-light)"><i class="bi bi-percent" style="color:var(--accent)"></i></div>
+          <h4 style="color:var(--primary)">Competitive Rates</h4>
+          <p>We shop multiple banks simultaneously to secure you the most competitive interest rate available.</p>
+        </div>
+        <div class="why-card" style="background:var(--white); border:1px solid var(--gray-200)">
+          <div class="why-icon" style="background:var(--accent-light)"><i class="bi bi-lightning-charge" style="color:var(--accent)"></i></div>
+          <h4 style="color:var(--primary)">Fast Pre-Approval</h4>
+          <p>Get a pre-approval decision within 2 hours. Drive your new car the same day in most cases.</p>
+        </div>
+        <div class="why-card" style="background:var(--white); border:1px solid var(--gray-200)">
+          <div class="why-icon" style="background:var(--accent-light)"><i class="bi bi-person-check" style="color:var(--accent)"></i></div>
+          <h4 style="color:var(--primary)">Dedicated Finance Manager</h4>
+          <p>A personal finance manager guides you through the entire process and negotiates on your behalf.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>Â© 2026 Adolph Motors. All rights reserved.</p>
+      <div class="footer-bottom-links"><a href="/inventory.html">Browse Cars</a><a href="/contact.html">Contact</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script src="/js/finance.js"></script>
+</body>
+</html>
+

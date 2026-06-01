@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Get a fair trade-in valuation for your current vehicle at Adolph Motors. Quick online submission.">
+  <title>Trade-In Valuation | Adolph Motors</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<nav class="navbar solid" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><div class="logo-icon">A</div><div class="logo-text">Adolph Motors<span>Your Journey Starts Here</span></div></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/inventory.html">Inventory</a>
+      <a href="/finance.html">Finance</a>
+      <a href="/trade-in.html" class="active">Trade-In</a>
+      <a href="/compare.html">Compare</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/inventory.html?wishlist=true" class="nav-wishlist-btn" title="Wishlist">
+        <i class="bi bi-heart"></i>
+        <span class="wishlist-badge hidden" id="wishlistCount">0</span>
+      </a>
+      <a href="/inventory.html" class="btn btn-primary btn-sm">Browse Cars</a>
+      <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/"><i class="bi bi-house"></i> Home</a>
+  <a href="/inventory.html"><i class="bi bi-grid-3x3-gap"></i> Inventory</a>
+  <a href="/finance.html"><i class="bi bi-calculator"></i> Finance</a>
+  <a href="/trade-in.html"><i class="bi bi-arrow-left-right"></i> Trade-In</a>
+  <a href="/about.html"><i class="bi bi-info-circle"></i> About</a>
+  <a href="/contact.html"><i class="bi bi-envelope"></i> Contact</a>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb"><a href="/">Home</a><span><i class="bi bi-chevron-right"></i></span><span class="current">Trade-In Valuation</span></nav>
+    <h1>Trade-In Your Vehicle</h1>
+    <p>Get a fair, transparent valuation for your current car in 24 hours</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:4rem; align-items:start">
+      <!-- Info -->
+      <div>
+        <h2 style="margin-bottom:1rem">How Our Trade-In Works</h2>
+        <p style="margin-bottom:2rem">Trading in your vehicle has never been easier. Submit your vehicle details online and we'll have a fair market valuation back to you within 24 hours &mdash; no obligation, no pressure.</p>
+
+        <div style="display:flex; flex-direction:column; gap:1.5rem; margin-bottom:2.5rem">
+          <div style="display:flex; gap:1rem; align-items:flex-start">
+            <div style="width:44px;height:44px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1rem;flex-shrink:0">1</div>
+            <div><h5 style="margin-bottom:.25rem">Submit Your Vehicle Details</h5><p style="font-size:.875rem">Fill in the form with your vehicle's make, model, year, and condition. The more detail, the more accurate the valuation.</p></div>
+          </div>
+          <div style="display:flex; gap:1rem; align-items:flex-start">
+            <div style="width:44px;height:44px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1rem;flex-shrink:0">2</div>
+            <div><h5 style="margin-bottom:.25rem">We Research the Market</h5><p style="font-size:.875rem">Our experienced team researches current market values, auction prices, and demand to give you the best possible offer.</p></div>
+          </div>
+          <div style="display:flex; gap:1rem; align-items:flex-start">
+            <div style="width:44px;height:44px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1rem;flex-shrink:0">3</div>
+            <div><h5 style="margin-bottom:.25rem">Receive Your Valuation</h5><p style="font-size:.875rem">We contact you within 24 hours with our offer. If you're happy, we arrange a physical inspection and same-day payment.</p></div>
+          </div>
+          <div style="display:flex; gap:1rem; align-items:flex-start">
+            <div style="width:44px;height:44px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:1rem;flex-shrink:0">4</div>
+            <div><h5 style="margin-bottom:.25rem">Use It as a Deposit</h5><p style="font-size:.875rem">Your trade-in value can be used directly as a deposit on any vehicle in our stock, reducing your monthly payment.</p></div>
+          </div>
+        </div>
+
+        <div style="background:var(--success-light); border:1px solid #bbf7d0; border-radius:var(--radius-md); padding:1.25rem">
+          <h5 style="color:var(--success); margin-bottom:.5rem"><i class="bi bi-shield-check"></i> Our Promise to You</h5>
+          <p style="font-size:.875rem; color:#166534">We offer honest, market-related valuations. We don't lowball &mdash; we want you to be happy with the trade-in so you come back to us for your next vehicle.</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div>
+        <div class="calc-card" id="tradeInFormCard">
+          <h3 style="margin-bottom:.25rem">Vehicle Details</h3>
+          <p style="font-size:.875rem; color:var(--gray-500); margin-bottom:1.75rem">Tell us about your current vehicle</p>
+
+          <form id="tradeInForm">
+            <h5 style="margin-bottom:1rem; color:var(--gray-600)">Your Contact Information</h5>
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">First Name <span class="req">*</span></label><input type="text" class="form-control" id="tiFirstName" required placeholder="John"></div>
+              <div class="form-group"><label class="form-label">Last Name <span class="req">*</span></label><input type="text" class="form-control" id="tiLastName" required placeholder="Smith"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Email Address <span class="req">*</span></label><input type="email" class="form-control" id="tiEmail" required placeholder="john@example.com"></div>
+            <div class="form-group"><label class="form-label">Phone Number <span class="req">*</span></label><input type="tel" class="form-control" id="tiPhone" required placeholder="+27 82 000 0000"></div>
+
+            <hr style="border:none; border-top:1px solid var(--gray-200); margin:1.5rem 0">
+            <h5 style="margin-bottom:1rem; color:var(--gray-600)">Vehicle Information</h5>
+
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">Make <span class="req">*</span></label><input type="text" class="form-control" id="tiMake" required placeholder="e.g. Toyota"></div>
+              <div class="form-group"><label class="form-label">Model <span class="req">*</span></label><input type="text" class="form-control" id="tiModel" required placeholder="e.g. Corolla Cross"></div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group"><label class="form-label">Year <span class="req">*</span></label><input type="number" class="form-control" id="tiYear" required placeholder="e.g. 2020" min="1990" max="2026"></div>
+              <div class="form-group"><label class="form-label">Mileage (km) <span class="req">*</span></label><input type="number" class="form-control" id="tiMileage" required placeholder="e.g. 85000" min="0"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Colour</label><input type="text" class="form-control" id="tiColor" placeholder="e.g. Silver"></div>
+
+            <div class="form-group">
+              <label class="form-label">Overall Condition <span class="req">*</span></label>
+              <div class="condition-options">
+                <label class="condition-option">
+                  <input type="radio" name="tiCondition" value="Excellent" required>
+                  <div class="icon"><i class="bi bi-stars" style="font-size:1.5rem;color:var(--gold)"></i></div>
+                  <div class="label">Excellent</div>
+                </label>
+                <label class="condition-option">
+                  <input type="radio" name="tiCondition" value="Good">
+                  <div class="icon"><i class="bi bi-hand-thumbs-up" style="font-size:1.5rem;color:var(--success)"></i></div>
+                  <div class="label">Good</div>
+                </label>
+                <label class="condition-option">
+                  <input type="radio" name="tiCondition" value="Fair">
+                  <div class="icon"><i class="bi bi-dash-circle" style="font-size:1.5rem;color:var(--warning)"></i></div>
+                  <div class="label">Fair</div>
+                </label>
+                <label class="condition-option">
+                  <input type="radio" name="tiCondition" value="Poor">
+                  <div class="icon"><i class="bi bi-tools" style="font-size:1.5rem;color:var(--gray-500)"></i></div>
+                  <div class="label">Poor</div>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Service History</label>
+              <select class="form-control" id="tiServiceHistory">
+                <option value="">Select...</option>
+                <option>Full Service History (Dealer)</option>
+                <option>Full Service History (Logbook)</option>
+                <option>Partial Service History</option>
+                <option>No Service History</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Additional Notes / Known Issues</label>
+              <textarea class="form-control" id="tiExtras" rows="3" placeholder="Panel damage, mechanical issues, aftermarket accessories, etc."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Your Expected Price (R) <span style="font-weight:400; color:var(--gray-500)">(optional)</span></label>
+              <input type="number" class="form-control" id="tiExpectedPrice" placeholder="e.g. 250000" min="0">
+              <div class="form-hint">Let us know what you're hoping to get &mdash; we'll aim to match or beat it.</div>
+            </div>
+
+            <div id="tradeInAlert"></div>
+            <button type="submit" class="btn btn-primary btn-full btn-lg" id="tradeInSubmit">
+              <i class="bi bi-send"></i> Submit for Valuation
+            </button>
+            <p style="font-size:.75rem; color:var(--gray-500); text-align:center; margin-top:.75rem">You'll receive your valuation within 24 hours. No obligation to accept.</p>
+          </form>
+        </div>
+
+        <!-- Success State (hidden initially) -->
+        <div id="tradeInSuccess" style="display:none; text-align:center; padding:3rem 2rem; background:var(--white); border-radius:var(--radius-xl); border:1px solid var(--gray-200)">
+          <div style="margin-bottom:1rem"><i class="bi bi-check-circle-fill" style="font-size:4rem;color:var(--success)"></i></div>
+          <h3 style="margin-bottom:.5rem">Request Received!</h3>
+          <p style="margin-bottom:1.5rem">Your reference number is <strong id="tiReference" style="color:var(--accent)"></strong>. Our team will contact you within 24 hours with a fair market valuation.</p>
+          <a href="/inventory.html" class="btn btn-primary">Browse Vehicles to Upgrade To</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 Adolph Motors. All rights reserved.</p>
+      <div class="footer-bottom-links"><a href="/inventory.html">Browse Cars</a><a href="/contact.html">Contact</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script>
+  // Trade-in form submission
+  document.getElementById('tradeInForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const condition = document.querySelector('input[name="tiCondition"]:checked')?.value;
+    if (!condition) { showAlert('tradeInAlert', 'Please select the vehicle condition', 'error'); return; }
+
+    const btn = document.getElementById('tradeInSubmit');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0 auto"></div>';
+
+    const data = {
+      first_name: document.getElementById('tiFirstName').value,
+      last_name: document.getElementById('tiLastName').value,
+      email: document.getElementById('tiEmail').value,
+      phone: document.getElementById('tiPhone').value,
+      make: document.getElementById('tiMake').value,
+      model: document.getElementById('tiModel').value,
+      year: document.getElementById('tiYear').value,
+      mileage: document.getElementById('tiMileage').value,
+      condition, color: document.getElementById('tiColor').value,
+      service_history: document.getElementById('tiServiceHistory').value,
+      extras: document.getElementById('tiExtras').value,
+      expected_price: document.getElementById('tiExpectedPrice').value || null,
+    };
+
+    try {
+      const res = await fetch('/api/bookings/trade-in', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+      const result = await res.json();
+      if (result.success) {
+        document.getElementById('tiReference').textContent = result.data.reference;
+        document.getElementById('tradeInFormCard').style.display = 'none';
+        document.getElementById('tradeInSuccess').style.display = 'block';
+        showToast('Trade-in request submitted successfully!', 'success');
+      } else {
+        showAlert('tradeInAlert', result.error || 'Failed to submit request', 'error');
+        btn.disabled = false; btn.innerHTML = '<i class="bi bi-send"></i> Submit for Valuation';
+      }
+    } catch { showAlert('tradeInAlert', 'Network error. Please try again.', 'error'); btn.disabled = false; btn.innerHTML = '<i class="bi bi-send"></i> Submit for Valuation'; }
+  });
+
+  function showAlert(id, msg, type) {
+    document.getElementById(id).innerHTML = `<div class="alert alert-${type === 'error' ? 'error' : 'success'}"><i class="bi bi-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i>${msg}</div>`;
+  }
+</script>
+</body>
+</html>

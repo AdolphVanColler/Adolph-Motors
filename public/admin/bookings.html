@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookings | Adolph Motors Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="admin-body">
+
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="admin-sidebar-header">
+    <div class="logo nav-logo"><div class="logo-icon">A</div><div class="logo-text">Adolph Motors<span>Admin Panel</span></div></div>
+  </div>
+  <nav class="admin-nav">
+    <div class="admin-nav-section">Main</div>
+    <a href="/admin/dashboard.html" class="admin-nav-item"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+    <a href="/admin/cars.html" class="admin-nav-item"><i class="bi bi-car-front"></i> Inventory</a>
+    <div class="admin-nav-section">Customers</div>
+    <a href="/admin/bookings.html" class="admin-nav-item active"><i class="bi bi-calendar-check"></i> Bookings</a>
+    <a href="/admin/messages.html" class="admin-nav-item"><i class="bi bi-envelope"></i> Messages</a>
+    <a href="/admin/trade-ins.html" class="admin-nav-item"><i class="bi bi-arrow-left-right"></i> Trade-Ins</a>
+    <a href="/admin/finance.html" class="admin-nav-item"><i class="bi bi-bank"></i> Finance Apps</a>
+    <div class="admin-nav-section">System</div>
+    <a href="/" target="_blank" class="admin-nav-item"><i class="bi bi-box-arrow-up-right"></i> View Website</a>
+    <a href="#" class="admin-nav-item" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  </nav>
+  <div class="admin-sidebar-footer">
+    <div class="admin-user">
+      <div class="admin-user-avatar" id="userAvatarLetter">A</div>
+      <div class="admin-user-info"><div class="name" id="adminUsername">Admin</div><div class="role">Administrator</div></div>
+    </div>
+  </div>
+</aside>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div style="display:flex; align-items:center; gap:1rem">
+      <button class="btn btn-ghost btn-sm" id="sidebarToggle"><i class="bi bi-list" style="font-size:1.2rem"></i></button>
+      <h1>Bookings</h1>
+    </div>
+    <div class="admin-topbar-actions">
+      <span id="pendingCount" style="font-size:.875rem; color:var(--gray-600)"></span>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <!-- Filters -->
+    <div class="admin-card" style="margin-bottom:1.5rem">
+      <div class="admin-card-body" style="padding:1rem 1.5rem">
+        <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap">
+          <select class="form-control" id="filterType" style="width:160px">
+            <option value="">All Types</option>
+            <option value="test_drive">Test Drive</option>
+            <option value="viewing">Viewing</option>
+          </select>
+          <select class="form-control" id="filterStatus" style="width:160px">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="loadBookings(1)"><i class="bi bi-filter"></i> Filter</button>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('filterType').value=''; document.getElementById('filterStatus').value=''; loadBookings(1)">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5>All Bookings (<span id="bookingsCount">...</span>)</h5>
+        <button class="btn btn-ghost btn-sm" onclick="loadBookings()"><i class="bi bi-arrow-clockwise"></i></button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Customer</th>
+              <th>Type</th>
+              <th>Vehicle</th>
+              <th>Preferred Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsTableBody">
+            <tr><td colspan="8" style="text-align:center; padding:3rem"><div class="spinner" style="margin:0 auto"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:1rem 1.5rem; border-top:1px solid var(--gray-100); display:flex; justify-content:center" id="bookingsPagination"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Booking Detail Modal -->
+<div class="modal-overlay" id="bookingDetailModal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3><i class="bi bi-calendar-check" style="color:var(--accent)"></i> Booking Details</h3>
+      <button class="modal-close" onclick="document.getElementById('bookingDetailModal').classList.remove('open')"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body" id="bookingDetailBody">
+    </div>
+  </div>
+</div>
+
+<script>
+  const token = localStorage.getItem('adminToken');
+  if (!token) window.location.href = '/admin/login.html';
+  const admin = JSON.parse(localStorage.getItem('adminUser') || '{}');
+  if (admin.username) { document.getElementById('adminUsername').textContent = admin.username; document.getElementById('userAvatarLetter').textContent = admin.username[0].toUpperCase(); }
+  document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); localStorage.removeItem('adminToken'); localStorage.removeItem('adminUser'); window.location.href = '/admin/login.html'; });
+  document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('adminSidebar').classList.toggle('open'));
+
+  // Pre-fill from query params
+  const qp = new URLSearchParams(location.search);
+  if (qp.get('status')) document.getElementById('filterStatus').value = qp.get('status');
+
+  let currentPage = 1;
+
+  async function loadBookings(page = 1) {
+    currentPage = page;
+    const type = document.getElementById('filterType').value;
+    const status = document.getElementById('filterStatus').value;
+    let url = `/api/bookings?page=${page}&limit=15`;
+    if (type)   url += `&type=${type}`;
+    if (status) url += `&status=${status}`;
+
+    const tbody = document.getElementById('bookingsTableBody');
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:2rem"><div class="spinner" style="margin:0 auto"></div></td></tr>';
+
+    try {
+      const res = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+      const data = await res.json();
+      document.getElementById('bookingsCount').textContent = data.pagination.total;
+
+      const pending = data.data.filter(b => b.status === 'pending').length;
+      document.getElementById('pendingCount').textContent = pending > 0 ? `${pending} pending confirmation` : '';
+
+      if (!data.data.length) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:3rem; color:var(--gray-400)"><i class="bi bi-calendar-x" style="font-size:2rem; display:block; margin-bottom:.5rem"></i>No bookings found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.data.map(b => {
+        const ref = b.booking_type === 'test_drive' ? `TD-${String(b.id).padStart(5,'0')}` : `VW-${String(b.id).padStart(5,'0')}`;
+        const typeLabel = b.booking_type === 'test_drive' ? `<span style="background:#ede9fe;color:#5b21b6;padding:.2rem .6rem;border-radius:9999px;font-size:.72rem;font-weight:600">Test Drive</span>` : `<span style="background:#e0f2fe;color:#0c4a6e;padding:.2rem .6rem;border-radius:9999px;font-size:.72rem;font-weight:600">Viewing</span>`;
+        return `<tr>
+          <td><span style="font-size:.8rem; color:var(--gray-500); font-family:monospace">${ref}</span></td>
+          <td><div style="font-weight:600; font-size:.875rem">${b.first_name} ${b.last_name}</div><div style="font-size:.75rem; color:var(--gray-500)">${b.email}</div></td>
+          <td>${typeLabel}</td>
+          <td style="font-size:.8rem">${b.make ? b.make + ' ' + b.model + ' ' + (b.year||'') : '—'}</td>
+          <td style="font-size:.875rem">${b.preferred_date}</td>
+          <td style="font-size:.875rem">${b.preferred_time}</td>
+          <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+          <td style="text-align:right; white-space:nowrap">
+            <button class="btn btn-ghost btn-sm view-btn" data-id="${b.id}" title="View Details"><i class="bi bi-eye"></i></button>
+            ${b.status==='pending' ? `<button class="btn btn-ghost btn-sm confirm-btn" data-id="${b.id}" title="Confirm" style="color:var(--success)"><i class="bi bi-check-lg"></i></button>` : ''}
+            ${b.status!=='cancelled' ? `<button class="btn btn-ghost btn-sm cancel-btn" data-id="${b.id}" title="Cancel" style="color:var(--accent)"><i class="bi bi-x-lg"></i></button>` : ''}
+          </td>
+        </tr>`;
+      }).join('');
+
+      // Pagination
+      const pg = document.getElementById('bookingsPagination');
+      pg.innerHTML = '';
+      if (data.pagination.totalPages > 1) {
+        if (currentPage > 1) pg.innerHTML += `<button class="page-btn" onclick="loadBookings(${currentPage-1})"><i class="bi bi-chevron-left"></i></button>`;
+        for (let i = 1; i <= data.pagination.totalPages; i++) pg.innerHTML += `<button class="page-btn ${i===currentPage?'active':''}" onclick="loadBookings(${i})">${i}</button>`;
+        if (currentPage < data.pagination.totalPages) pg.innerHTML += `<button class="page-btn" onclick="loadBookings(${currentPage+1})"><i class="bi bi-chevron-right"></i></button>`;
+      }
+
+      document.querySelectorAll('.view-btn').forEach(btn => btn.addEventListener('click', () => viewBooking(btn.dataset.id)));
+      document.querySelectorAll('.confirm-btn').forEach(btn => btn.addEventListener('click', () => updateBookingStatus(btn.dataset.id, 'confirmed')));
+      document.querySelectorAll('.cancel-btn').forEach(btn => btn.addEventListener('click', () => updateBookingStatus(btn.dataset.id, 'cancelled')));
+    } catch (e) { console.error(e); }
+  }
+
+  async function updateBookingStatus(id, status) {
+    if (!confirm(`${status === 'confirmed' ? 'Confirm' : 'Cancel'} this booking?`)) return;
+    try {
+      const res = await fetch(`/api/bookings/${id}`, { method:'PUT', headers:{'Content-Type':'application/json', Authorization:'Bearer '+token}, body: JSON.stringify({ status }) });
+      const data = await res.json();
+      if (data.success) loadBookings(currentPage);
+    } catch { alert('Failed to update booking'); }
+  }
+
+  async function viewBooking(id) {
+    const res = await fetch(`/api/bookings?page=1&limit=200`, { headers: { Authorization: 'Bearer ' + token } });
+    const data = await res.json();
+    const b = data.data.find(x => x.id == id);
+    if (!b) return;
+    const ref = b.booking_type === 'test_drive' ? `TD-${String(b.id).padStart(5,'0')}` : `VW-${String(b.id).padStart(5,'0')}`;
+    document.getElementById('bookingDetailBody').innerHTML = `
+      <div style="background:var(--gray-50); border-radius:var(--radius-md); padding:1.25rem; margin-bottom:1.25rem">
+        <div style="display:flex; justify-content:space-between; margin-bottom:.5rem">
+          <strong style="font-size:1.1rem">${ref}</strong>
+          <span class="status-badge status-${b.status}">${b.status}</span>
+        </div>
+        <div style="font-size:.8rem; color:var(--gray-500)">Booked: ${new Date(b.created_at).toLocaleString()}</div>
+      </div>
+      <table style="width:100%; font-size:.875rem; border-collapse:collapse">
+        <tr><td style="padding:.4rem 0; color:var(--gray-500); width:140px">Customer</td><td style="font-weight:600">${b.first_name} ${b.last_name}</td></tr>
+        <tr><td style="padding:.4rem 0; color:var(--gray-500)">Email</td><td>${b.email}</td></tr>
+        <tr><td style="padding:.4rem 0; color:var(--gray-500)">Phone</td><td>${b.phone}</td></tr>
+        <tr><td style="padding:.4rem 0; color:var(--gray-500)">Type</td><td style="text-transform:capitalize">${b.booking_type.replace('_',' ')}</td></tr>
+        <tr><td style="padding:.4rem 0; color:var(--gray-500)">Vehicle</td><td>${b.make ? b.make + ' ' + b.model + ' ' + (b.year||'') : 'Any vehicle'}</td></tr>
+        <tr><td style="padding:.4rem 0; color:var(--gray-500)">Preferred Date</td><td>${b.preferred_date} at ${b.preferred_time}</td></tr>
+        ${b.alternate_date ? `<tr><td style="padding:.4rem 0; color:var(--gray-500)">Alt. Date</td><td>${b.alternate_date} at ${b.alternate_time||''}</td></tr>` : ''}
+        ${b.message ? `<tr><td style="padding:.4rem 0; color:var(--gray-500); vertical-align:top">Notes</td><td>${b.message}</td></tr>` : ''}
+      </table>
+      <hr style="border:none; border-top:1px solid var(--gray-200); margin:1.25rem 0">
+      <div class="form-group"><label class="form-label">Admin Notes</label><textarea class="form-control" id="adminNotesField" rows="2">${b.admin_notes||''}</textarea></div>
+      <div style="display:flex; gap:.75rem; flex-wrap:wrap">
+        ${b.status === 'pending' ? `<button class="btn btn-success btn-sm" onclick="updateAndClose(${b.id}, 'confirmed')"><i class="bi bi-check-lg"></i> Confirm</button>` : ''}
+        ${b.status === 'confirmed' ? `<button class="btn btn-secondary btn-sm" onclick="updateAndClose(${b.id}, 'completed')"><i class="bi bi-flag"></i> Mark Completed</button>` : ''}
+        ${b.status !== 'cancelled' ? `<button class="btn btn-sm" style="background:var(--accent);color:#fff" onclick="updateAndClose(${b.id}, 'cancelled')"><i class="bi bi-x-lg"></i> Cancel</button>` : ''}
+        <button class="btn btn-ghost btn-sm" onclick="saveNotes(${b.id})"><i class="bi bi-save"></i> Save Notes</button>
+      </div>
+    `;
+    document.getElementById('bookingDetailModal').classList.add('open');
+  }
+
+  function updateAndClose(id, status) {
+    updateBookingStatus(id, status).then(() => document.getElementById('bookingDetailModal').classList.remove('open'));
+  }
+
+  async function saveNotes(id) {
+    const notes = document.getElementById('adminNotesField').value;
+    await fetch(`/api/bookings/${id}`, { method:'PUT', headers:{'Content-Type':'application/json', Authorization:'Bearer '+token}, body: JSON.stringify({ admin_notes: notes }) });
+    alert('Notes saved!');
+  }
+
+  loadBookings();
+</script>
+</body>
+</html>

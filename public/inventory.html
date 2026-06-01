@@ -1,0 +1,323 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse Adolph Motors' full vehicle inventory. Filter by make, model, price, and more. Test drives available.">
+  <title>Vehicle Inventory | Adolph Motors</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Navigation -->
+<nav class="navbar solid" id="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">A</div>
+      <div class="logo-text">Adolph Motors<span>Your Journey Starts Here</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-trigger active">Inventory <i class="bi bi-chevron-down" style="font-size:.7rem"></i></button>
+        <div class="nav-dropdown-menu">
+          <a href="/inventory.html"><i class="bi bi-grid-3x3-gap"></i> All Vehicles</a>
+          <a href="/inventory.html?sort=created_at&order=DESC"><i class="bi bi-stars"></i> New Arrivals</a>
+          <a href="/inventory.html?fuel_type=Hybrid"><i class="bi bi-lightning-charge"></i> Hybrid & Electric</a>
+          <a href="/inventory.html?featured=true"><i class="bi bi-fire"></i> Hot Deals</a>
+        </div>
+      </div>
+      <a href="/finance.html">Finance</a>
+      <a href="/trade-in.html">Trade-In</a>
+      <a href="/compare.html">Compare</a>
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/inventory.html?wishlist=true" class="nav-wishlist-btn" title="Wishlist">
+        <i class="bi bi-heart"></i>
+        <span class="wishlist-badge hidden" id="wishlistCount">0</span>
+      </a>
+      <a href="/contact.html#book" class="btn btn-primary btn-sm">Book Test Drive</a>
+      <button class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/"><i class="bi bi-house"></i> Home</a>
+  <a href="/inventory.html"><i class="bi bi-grid-3x3-gap"></i> All Vehicles</a>
+  <a href="/finance.html"><i class="bi bi-calculator"></i> Finance</a>
+  <a href="/trade-in.html"><i class="bi bi-arrow-left-right"></i> Trade-In</a>
+  <a href="/compare.html"><i class="bi bi-layout-split"></i> Compare</a>
+  <a href="/about.html"><i class="bi bi-info-circle"></i> About</a>
+  <a href="/contact.html"><i class="bi bi-envelope"></i> Contact</a>
+</div>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="/">Home</a>
+      <span><i class="bi bi-chevron-right"></i></span>
+      <span class="current">Inventory</span>
+    </nav>
+    <h1>Vehicle Inventory</h1>
+    <p>Browse our full selection of quality pre-owned vehicles</p>
+  </div>
+</div>
+
+<!-- Mobile Filter Toggle -->
+<div style="background:var(--white); border-bottom:1px solid var(--gray-200); padding:.75rem 1.25rem; display:none" id="mobileFilterBar">
+  <div style="max-width:1280px; margin:0 auto; display:flex; gap:.75rem; align-items:center">
+    <button class="btn btn-outline btn-sm" id="mobileFilterToggle"><i class="bi bi-sliders"></i> Filters</button>
+    <div style="flex:1; position:relative">
+      <i class="bi bi-search" style="position:absolute; left:.875rem; top:50%; transform:translateY(-50%); color:var(--gray-400)"></i>
+      <input type="text" id="mobileSearch" placeholder="Search make, model..." class="form-control" style="padding-left:2.5rem; height:38px; font-size:.85rem">
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<section class="section-sm">
+  <div class="container">
+    <!-- Search Bar (Desktop) -->
+    <div style="background:var(--white); border-radius:var(--radius-xl); padding:1.25rem 1.5rem; margin-bottom:2rem; border:1px solid var(--gray-200); display:flex; gap:1rem; align-items:center; flex-wrap:wrap">
+      <div style="flex:1; min-width:200px; position:relative">
+        <i class="bi bi-search" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--gray-400)"></i>
+        <input type="text" id="searchInput" placeholder="Search by make, model, or stock number..." class="form-control" style="padding-left:2.75rem">
+      </div>
+      <button class="btn btn-primary" id="searchBtn"><i class="bi bi-search"></i> Search</button>
+      <button class="btn btn-ghost" id="clearSearchBtn"><i class="bi bi-x"></i> Clear</button>
+    </div>
+
+    <div class="inventory-layout">
+      <!-- Filters Sidebar -->
+      <aside class="filters-sidebar" id="filtersSidebar">
+        <div class="filters-header">
+          <h4><i class="bi bi-sliders" style="color:var(--accent)"></i> Filters</h4>
+          <span class="filters-clear" id="clearFilters">Clear All</span>
+        </div>
+
+        <div class="filter-group">
+          <h5>Make</h5>
+          <select id="filterMake" name="make">
+            <option value="">All Makes</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h5>Body Type</h5>
+          <select id="filterBodyType" name="body_type">
+            <option value="">All Types</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h5>Fuel Type</h5>
+          <select id="filterFuelType" name="fuel_type">
+            <option value="">All Fuel Types</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h5>Transmission</h5>
+          <select id="filterTransmission" name="transmission">
+            <option value="">Any</option>
+            <option value="Automatic">Automatic</option>
+            <option value="Manual">Manual</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h5>Price Range (R)</h5>
+          <div class="price-range">
+            <input type="number" id="filterPriceMin" placeholder="Min" min="0" step="10000">
+            <input type="number" id="filterPriceMax" placeholder="Max" min="0" step="10000">
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h5>Year</h5>
+          <div class="price-range">
+            <input type="number" id="filterYearMin" placeholder="From" min="2010" max="2026">
+            <input type="number" id="filterYearMax" placeholder="To" min="2010" max="2026">
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h5>Max Mileage (km)</h5>
+          <select id="filterMileage" name="mileage_max">
+            <option value="">Any</option>
+            <option value="20000">Under 20,000 km</option>
+            <option value="50000">Under 50,000 km</option>
+            <option value="100000">Under 100,000 km</option>
+            <option value="150000">Under 150,000 km</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h5>Condition</h5>
+          <div class="filter-check">
+            <label><input type="checkbox" value="Used" name="condition"> Used</label>
+            <label><input type="checkbox" value="New" name="condition"> New</label>
+            <label><input type="checkbox" value="Demo" name="condition"> Demo</label>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" id="applyFilters">
+          <i class="bi bi-check2"></i> Apply Filters
+        </button>
+      </aside>
+
+      <!-- Inventory Content -->
+      <div class="inventory-content">
+        <div class="inventory-header">
+          <div class="results-count">Showing <span id="resultsCount">...</span> vehicles</div>
+          <div class="inventory-controls">
+            <select class="sort-select" id="sortSelect">
+              <option value="created_at-DESC">Latest First</option>
+              <option value="price-ASC">Price: Low to High</option>
+              <option value="price-DESC">Price: High to Low</option>
+              <option value="year-DESC">Newest Year</option>
+              <option value="mileage-ASC">Lowest Mileage</option>
+              <option value="views-DESC">Most Viewed</option>
+            </select>
+            <div class="view-toggle">
+              <button class="view-btn active" id="gridViewBtn" title="Grid View"><i class="bi bi-grid-3x3-gap"></i></button>
+              <button class="view-btn" id="listViewBtn" title="List View"><i class="bi bi-list-ul"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Filters Display -->
+        <div id="activeFilters" style="display:none; margin-bottom:1rem; flex-wrap:wrap; gap:.5rem"></div>
+
+        <!-- Cars Grid -->
+        <div class="cars-grid" id="carsGrid">
+          <div class="loading-overlay" style="grid-column:1/-1"><div class="spinner"></div></div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Booking Modal -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="bookingModalTitle">Book a Test Drive</h3>
+      <button class="modal-close" id="closeBookingModal" onclick="closeModal('bookingModal')"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="bookingCarInfo" style="background:var(--gray-50); border-radius:var(--radius-md); padding:1rem; margin-bottom:1.25rem; display:none"></div>
+      <form id="bookingForm">
+        <input type="hidden" id="bookingCarId">
+        <input type="hidden" id="bookingType" value="test_drive">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">First Name <span class="req">*</span></label>
+            <input type="text" class="form-control" id="bFirstName" required placeholder="John">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name <span class="req">*</span></label>
+            <input type="text" class="form-control" id="bLastName" required placeholder="Smith">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email <span class="req">*</span></label>
+          <input type="email" class="form-control" id="bEmail" required placeholder="john@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number <span class="req">*</span></label>
+          <input type="tel" class="form-control" id="bPhone" required placeholder="+27 82 000 0000">
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Preferred Date <span class="req">*</span></label>
+            <input type="date" class="form-control" id="bDate" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Preferred Time <span class="req">*</span></label>
+            <select class="form-control" id="bTime" required>
+              <option value="">Select time</option>
+              <option>08:00</option><option>09:00</option><option>10:00</option>
+              <option>11:00</option><option>12:00</option><option>13:00</option>
+              <option>14:00</option><option>15:00</option><option>16:00</option>
+              <option>17:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Additional Notes</label>
+          <textarea class="form-control" id="bMessage" rows="3" placeholder="Any specific questions or requests?"></textarea>
+        </div>
+        <div id="bookingFormAlert"></div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="bookingSubmitBtn">
+          <i class="bi bi-calendar-check"></i> Confirm Booking
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo nav-logo">
+          <div class="logo-icon">A</div>
+          <div class="logo-text">Adolph Motors<span>Your Journey Starts Here</span></div>
+        </div>
+        <p>South Africa's trusted independent car dealership.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="bi bi-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Inventory</h5>
+        <div class="footer-links">
+          <a href="/inventory.html">All Vehicles</a>
+          <a href="/inventory.html?featured=true">Hot Deals</a>
+          <a href="/inventory.html?fuel_type=Hybrid">Hybrid / EV</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <div class="footer-links">
+          <a href="/finance.html">Finance Calculator</a>
+          <a href="/trade-in.html">Trade-In</a>
+          <a href="/compare.html">Compare Cars</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <div class="footer-contact-item"><i class="bi bi-telephone-fill"></i><span>+27 11 000 0000</span></div>
+        <div class="footer-contact-item"><i class="bi bi-envelope-fill"></i><span>info@adolphmotors.co.za</span></div>
+        <div class="footer-contact-item"><i class="bi bi-clock-fill"></i><span>Mon–Sat: 8am–6pm</span></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Adolph Motors. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script src="/js/inventory.js"></script>
+</body>
+</html>

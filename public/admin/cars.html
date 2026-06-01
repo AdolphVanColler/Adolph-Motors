@@ -1,0 +1,422 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory Management | Adolph Motors Admin</title>
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="admin-body">
+
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="admin-sidebar-header">
+    <div class="logo nav-logo">
+      <div class="logo-icon">A</div>
+      <div class="logo-text">Adolph Motors<span>Admin Panel</span></div>
+    </div>
+  </div>
+  <nav class="admin-nav">
+    <div class="admin-nav-section">Main</div>
+    <a href="/admin/dashboard.html" class="admin-nav-item"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+    <a href="/admin/cars.html" class="admin-nav-item active"><i class="bi bi-car-front"></i> Inventory</a>
+    <div class="admin-nav-section">Customers</div>
+    <a href="/admin/bookings.html" class="admin-nav-item"><i class="bi bi-calendar-check"></i> Bookings</a>
+    <a href="/admin/messages.html" class="admin-nav-item"><i class="bi bi-envelope"></i> Messages</a>
+    <a href="/admin/trade-ins.html" class="admin-nav-item"><i class="bi bi-arrow-left-right"></i> Trade-Ins</a>
+    <a href="/admin/finance.html" class="admin-nav-item"><i class="bi bi-bank"></i> Finance Apps</a>
+    <div class="admin-nav-section">System</div>
+    <a href="/" target="_blank" class="admin-nav-item"><i class="bi bi-box-arrow-up-right"></i> View Website</a>
+    <a href="#" class="admin-nav-item" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  </nav>
+  <div class="admin-sidebar-footer">
+    <div class="admin-user">
+      <div class="admin-user-avatar" id="userAvatarLetter">A</div>
+      <div class="admin-user-info">
+        <div class="name" id="adminUsername">Admin</div>
+        <div class="role">Administrator</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div style="display:flex; align-items:center; gap:1rem">
+      <button class="btn btn-ghost btn-sm" id="sidebarToggle"><i class="bi bi-list" style="font-size:1.2rem"></i></button>
+      <h1>Inventory Management</h1>
+    </div>
+    <div class="admin-topbar-actions">
+      <button class="btn btn-primary btn-sm" id="addCarBtn"><i class="bi bi-plus"></i> Add Vehicle</button>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <!-- Search & Filters -->
+    <div class="admin-card" style="margin-bottom:1.5rem">
+      <div class="admin-card-body" style="padding:1rem 1.5rem">
+        <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap">
+          <input type="text" class="form-control" id="carSearch" placeholder="Search by make, model, stock #..." style="flex:1; min-width:200px">
+          <select class="form-control" id="carFilterMake" style="width:160px">
+            <option value="">All Makes</option>
+          </select>
+          <select class="form-control" id="carFilterStatus" style="width:140px">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="featured">Featured</option>
+          </select>
+          <button class="btn btn-primary btn-sm" id="searchCarsBtn"><i class="bi bi-search"></i> Search</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cars Table -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5>Vehicle Inventory (<span id="carsCount">...</span>)</h5>
+        <div style="display:flex; gap:.5rem">
+          <button class="btn btn-ghost btn-sm" id="refreshCarsBtn"><i class="bi bi-arrow-clockwise"></i></button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Stock #</th>
+              <th>Vehicle</th>
+              <th>Year</th>
+              <th>Price</th>
+              <th>Mileage</th>
+              <th>Fuel</th>
+              <th>Status</th>
+              <th>Views</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="carsTableBody">
+            <tr><td colspan="9" style="text-align:center; padding:3rem"><div class="spinner" style="margin:0 auto"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:1rem 1.5rem; border-top:1px solid var(--gray-100); display:flex; justify-content:center" id="carsPagination"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Add/Edit Car Modal -->
+<div class="modal-overlay" id="carModal" style="align-items:flex-start; padding-top:2rem; overflow-y:auto">
+  <div class="modal" style="max-width:700px; max-height:none">
+    <div class="modal-header">
+      <h3 id="carModalTitle"><i class="bi bi-car-front" style="color:var(--accent)"></i> Add Vehicle</h3>
+      <button class="modal-close" id="closeCarModal"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="carForm" enctype="multipart/form-data">
+        <input type="hidden" id="carId">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem">
+          <div class="form-group"><label class="form-label">Make <span class="req">*</span></label><input type="text" class="form-control" id="cfMake" required placeholder="Toyota"></div>
+          <div class="form-group"><label class="form-label">Model <span class="req">*</span></label><input type="text" class="form-control" id="cfModel" required placeholder="Fortuner"></div>
+          <div class="form-group"><label class="form-label">Variant</label><input type="text" class="form-control" id="cfVariant" placeholder="2.8GD-6 4x4"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:1rem">
+          <div class="form-group"><label class="form-label">Year <span class="req">*</span></label><input type="number" class="form-control" id="cfYear" required min="1990" max="2027" placeholder="2024"></div>
+          <div class="form-group"><label class="form-label">Price (R) <span class="req">*</span></label><input type="number" class="form-control" id="cfPrice" required min="0" placeholder="499000"></div>
+          <div class="form-group"><label class="form-label">Mileage (km)</label><input type="number" class="form-control" id="cfMileage" min="0" placeholder="25000"></div>
+          <div class="form-group"><label class="form-label">Stock #</label><input type="text" class="form-control" id="cfStock" placeholder="AP013"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem">
+          <div class="form-group">
+            <label class="form-label">Body Type</label>
+            <select class="form-control" id="cfBodyType">
+              <option value="">Select...</option>
+              <option>Sedan</option><option>SUV</option><option>Hatchback</option>
+              <option>Bakkie</option><option>Coupe</option><option>MPV</option>
+              <option>Convertible</option><option>Van</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fuel Type</label>
+            <select class="form-control" id="cfFuel">
+              <option>Petrol</option><option>Diesel</option><option>Hybrid</option>
+              <option>Electric</option><option>LPG</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Transmission</label>
+            <select class="form-control" id="cfTransmission">
+              <option>Automatic</option><option>Manual</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:1rem">
+          <div class="form-group"><label class="form-label">Colour</label><input type="text" class="form-control" id="cfColor" placeholder="Pearl White"></div>
+          <div class="form-group"><label class="form-label">Engine</label><input type="text" class="form-control" id="cfEngine" placeholder="2.8L Diesel"></div>
+          <div class="form-group"><label class="form-label">Doors</label><input type="number" class="form-control" id="cfDoors" min="2" max="6" placeholder="4"></div>
+          <div class="form-group"><label class="form-label">Seats</label><input type="number" class="form-control" id="cfSeats" min="1" max="12" placeholder="5"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem">
+          <div class="form-group">
+            <label class="form-label">Condition</label>
+            <select class="form-control" id="cfCondition">
+              <option>Used</option><option>New</option><option>Demo</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Badge</label><input type="text" class="form-control" id="cfBadge" placeholder="Hot Deal, Premium, etc."></div>
+          <div class="form-group"><label class="form-label">VIN</label><input type="text" class="form-control" id="cfVin" placeholder="VIN number"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="cfDescription" rows="3" placeholder="Vehicle description..."></textarea></div>
+        <div class="form-group">
+          <label class="form-label">Features (one per line)</label>
+          <textarea class="form-control" id="cfFeatures" rows="4" placeholder="Leather seats&#10;Sunroof&#10;Apple CarPlay&#10;Reverse camera"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Vehicle Images</label>
+          <input type="file" class="form-control" id="cfImages" multiple accept="image/*" style="padding:.5rem">
+          <div class="form-hint">Upload up to 20 images (JPG, PNG, WebP). Max 10MB each.</div>
+          <div id="existingImages" style="display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem"></div>
+        </div>
+        <div style="display:flex; gap:1rem; margin-bottom:1.5rem">
+          <label style="display:flex; align-items:center; gap:.5rem; cursor:pointer; font-size:.875rem">
+            <input type="checkbox" id="cfFeatured" style="accent-color:var(--accent)"> Featured vehicle
+          </label>
+          <label style="display:flex; align-items:center; gap:.5rem; cursor:pointer; font-size:.875rem">
+            <input type="checkbox" id="cfActive" checked style="accent-color:var(--success)"> Active (visible on site)
+          </label>
+        </div>
+        <div id="carFormAlert"></div>
+        <div style="display:flex; gap:.75rem">
+          <button type="submit" class="btn btn-primary btn-lg" id="carFormSubmitBtn" style="flex:1">
+            <i class="bi bi-check-lg"></i> Save Vehicle
+          </button>
+          <button type="button" class="btn btn-ghost btn-lg" id="cancelCarBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <h3 style="color:var(--accent)"><i class="bi bi-trash"></i> Remove Vehicle</h3>
+      <button class="modal-close" onclick="document.getElementById('deleteModal').classList.remove('open')"><i class="bi bi-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to remove <strong id="deleteCarName"></strong> from the inventory? This action can be undone by an admin.</p>
+      <div style="display:flex; gap:.75rem; margin-top:1.5rem">
+        <button class="btn btn-primary btn-full" id="confirmDeleteBtn" style="background:var(--accent)"><i class="bi bi-trash"></i> Remove</button>
+        <button class="btn btn-ghost btn-full" onclick="document.getElementById('deleteModal').classList.remove('open')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const token = localStorage.getItem('adminToken');
+  if (!token) window.location.href = '/admin/login.html';
+
+  const admin = JSON.parse(localStorage.getItem('adminUser') || '{}');
+  if (admin.username) { document.getElementById('adminUsername').textContent = admin.username; document.getElementById('userAvatarLetter').textContent = admin.username[0].toUpperCase(); }
+
+  document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); localStorage.removeItem('adminToken'); localStorage.removeItem('adminUser'); window.location.href = '/admin/login.html'; });
+  document.getElementById('sidebarToggle').addEventListener('click', () => document.getElementById('adminSidebar').classList.toggle('open'));
+
+  let currentPage = 1, deleteCarId = null, editCarId = null, existingImgUrls = [];
+
+  async function loadCars(page = 1) {
+    currentPage = page;
+    const search = document.getElementById('carSearch').value;
+    const make = document.getElementById('carFilterMake').value;
+    const status = document.getElementById('carFilterStatus').value;
+    let url = `/api/cars?page=${page}&limit=15`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (make)   url += `&make=${encodeURIComponent(make)}`;
+    if (status === 'featured') url += '&featured=true';
+
+    const tbody = document.getElementById('carsTableBody');
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:2rem"><div class="spinner" style="margin:0 auto"></div></td></tr>';
+
+    try {
+      const res = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+      const data = await res.json();
+      document.getElementById('carsCount').textContent = data.pagination.total;
+
+      // Load makes
+      const makeFilter = document.getElementById('carFilterMake');
+      if (makeFilter.options.length <= 1 && data.filters?.makes) {
+        data.filters.makes.forEach(m => { const o = document.createElement('option'); o.value = m; o.textContent = m; makeFilter.appendChild(o); });
+      }
+
+      if (!data.data.length) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:3rem; color:var(--gray-400)"><i class="bi bi-car-front" style="font-size:2rem; display:block; margin-bottom:.5rem"></i>No vehicles found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.data.map(car => {
+        const imgs = JSON.parse(car.images || '[]');
+        const thumb = imgs[0] ? `<img src="${imgs[0]}" alt="${car.make}" style="width:50px; height:38px; object-fit:cover; border-radius:4px">` : `<div style="width:50px;height:38px;background:var(--gray-100);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gray-400);font-size:.7rem"><i class="bi bi-image"></i></div>`;
+        return `<tr>
+          <td><span style="font-size:.8rem; color:var(--gray-500)">${car.stock_number || '—'}</span></td>
+          <td><div style="display:flex; align-items:center; gap:.75rem">${thumb}<div><div style="font-weight:600; font-size:.875rem">${car.make} ${car.model}</div><div style="font-size:.75rem; color:var(--gray-500)">${car.variant || ''}</div></div></div></td>
+          <td>${car.year}</td>
+          <td style="font-weight:600">R ${Number(car.price).toLocaleString()}</td>
+          <td>${Number(car.mileage).toLocaleString()} km</td>
+          <td>${car.fuel_type}</td>
+          <td>
+            ${car.is_featured ? '<span class="status-badge" style="background:#fef3c7; color:#92400e; margin-bottom:.25rem; display:inline-block">Featured</span>' : ''}
+            <span class="status-badge ${car.is_active ? 'status-confirmed' : 'status-cancelled'}">${car.is_active ? 'Active' : 'Inactive'}</span>
+          </td>
+          <td>${car.views}</td>
+          <td style="text-align:right; white-space:nowrap">
+            <a href="/car-detail.html?id=${car.id}" target="_blank" class="btn btn-ghost btn-sm" title="View"><i class="bi bi-eye"></i></a>
+            <button class="btn btn-ghost btn-sm edit-car-btn" data-id="${car.id}" title="Edit"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-ghost btn-sm delete-car-btn" data-id="${car.id}" data-name="${car.make} ${car.model}" title="Delete" style="color:var(--accent)"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+
+      // Pagination
+      const pg = document.getElementById('carsPagination');
+      pg.innerHTML = '';
+      if (data.pagination.totalPages > 1) {
+        if (currentPage > 1) pg.innerHTML += `<button class="page-btn" onclick="loadCars(${currentPage - 1})"><i class="bi bi-chevron-left"></i></button>`;
+        for (let i = 1; i <= data.pagination.totalPages; i++) {
+          pg.innerHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="loadCars(${i})">${i}</button>`;
+        }
+        if (currentPage < data.pagination.totalPages) pg.innerHTML += `<button class="page-btn" onclick="loadCars(${currentPage + 1})"><i class="bi bi-chevron-right"></i></button>`;
+      }
+
+      // Bind events
+      document.querySelectorAll('.edit-car-btn').forEach(btn => btn.addEventListener('click', () => openEditModal(btn.dataset.id)));
+      document.querySelectorAll('.delete-car-btn').forEach(btn => btn.addEventListener('click', () => openDeleteModal(btn.dataset.id, btn.dataset.name)));
+    } catch (e) { console.error(e); tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--accent); padding:2rem">Failed to load vehicles</td></tr>'; }
+  }
+
+  function openAddModal() {
+    editCarId = null; existingImgUrls = [];
+    document.getElementById('carModalTitle').innerHTML = '<i class="bi bi-plus-circle" style="color:var(--accent)"></i> Add Vehicle';
+    document.getElementById('carForm').reset();
+    document.getElementById('carId').value = '';
+    document.getElementById('existingImages').innerHTML = '';
+    document.getElementById('cfActive').checked = true;
+    document.getElementById('carModal').classList.add('open');
+  }
+
+  async function openEditModal(id) {
+    editCarId = id;
+    document.getElementById('carModalTitle').innerHTML = '<i class="bi bi-pencil" style="color:var(--accent)"></i> Edit Vehicle';
+    document.getElementById('carModal').classList.add('open');
+
+    try {
+      const res = await fetch(`/api/cars/${id}`);
+      const data = await res.json();
+      const car = data.data;
+      document.getElementById('carId').value = car.id;
+      document.getElementById('cfMake').value = car.make || '';
+      document.getElementById('cfModel').value = car.model || '';
+      document.getElementById('cfVariant').value = car.variant || '';
+      document.getElementById('cfYear').value = car.year || '';
+      document.getElementById('cfPrice').value = car.price || '';
+      document.getElementById('cfMileage').value = car.mileage || '';
+      document.getElementById('cfStock').value = car.stock_number || '';
+      document.getElementById('cfBodyType').value = car.body_type || '';
+      document.getElementById('cfFuel').value = car.fuel_type || 'Petrol';
+      document.getElementById('cfTransmission').value = car.transmission || 'Automatic';
+      document.getElementById('cfColor').value = car.color || '';
+      document.getElementById('cfEngine').value = car.engine || '';
+      document.getElementById('cfDoors').value = car.doors || '';
+      document.getElementById('cfSeats').value = car.seats || '';
+      document.getElementById('cfCondition').value = car.condition || 'Used';
+      document.getElementById('cfBadge').value = car.badge || '';
+      document.getElementById('cfVin').value = car.vin || '';
+      document.getElementById('cfDescription').value = car.description || '';
+      document.getElementById('cfFeatures').value = Array.isArray(car.features) ? car.features.join('\n') : '';
+      document.getElementById('cfFeatured').checked = !!car.is_featured;
+      document.getElementById('cfActive').checked = !!car.is_active;
+
+      existingImgUrls = car.images || [];
+      const ei = document.getElementById('existingImages');
+      ei.innerHTML = existingImgUrls.map((img, i) => `
+        <div style="position:relative">
+          <img src="${img}" style="width:70px;height:52px;object-fit:cover;border-radius:4px;border:2px solid var(--gray-200)">
+          <button type="button" onclick="removeExistingImg(${i})" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--accent);color:#fff;border-radius:50%;font-size:.65rem;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer">×</button>
+        </div>`).join('');
+    } catch (e) { console.error(e); }
+  }
+
+  function removeExistingImg(idx) {
+    existingImgUrls.splice(idx, 1);
+    document.getElementById('existingImages').innerHTML = existingImgUrls.map((img, i) => `
+      <div style="position:relative">
+        <img src="${img}" style="width:70px;height:52px;object-fit:cover;border-radius:4px;border:2px solid var(--gray-200)">
+        <button type="button" onclick="removeExistingImg(${i})" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--accent);color:#fff;border-radius:50%;font-size:.65rem;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer">×</button>
+      </div>`).join('');
+  }
+
+  function openDeleteModal(id, name) {
+    deleteCarId = id;
+    document.getElementById('deleteCarName').textContent = name;
+    document.getElementById('deleteModal').classList.add('open');
+  }
+
+  document.getElementById('carForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('carFormSubmitBtn');
+    btn.disabled = true; btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0 auto"></div>';
+
+    const fd = new FormData();
+    const fields = { make:'cfMake', model:'cfModel', variant:'cfVariant', year:'cfYear', price:'cfPrice', mileage:'cfMileage', stock_number:'cfStock', body_type:'cfBodyType', fuel_type:'cfFuel', transmission:'cfTransmission', color:'cfColor', engine:'cfEngine', doors:'cfDoors', seats:'cfSeats', condition:'cfCondition', badge:'cfBadge', vin:'cfVin', description:'cfDescription' };
+    for (const [k, id] of Object.entries(fields)) fd.append(k, document.getElementById(id).value);
+
+    const feats = document.getElementById('cfFeatures').value.split('\n').map(s => s.trim()).filter(Boolean);
+    fd.append('features', JSON.stringify(feats));
+    fd.append('is_featured', document.getElementById('cfFeatured').checked ? '1' : '0');
+    fd.append('is_active', document.getElementById('cfActive').checked ? '1' : '0');
+    fd.append('existing_images', JSON.stringify(existingImgUrls));
+
+    const files = document.getElementById('cfImages').files;
+    for (const f of files) fd.append('images', f);
+
+    const id = document.getElementById('carId').value;
+    const url = id ? `/api/cars/${id}` : '/api/cars';
+    const method = id ? 'PUT' : 'POST';
+
+    try {
+      const res = await fetch(url, { method, headers: { Authorization: 'Bearer ' + token }, body: fd });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('carModal').classList.remove('open');
+        loadCars(currentPage);
+        if (typeof showToast === 'function') showToast(id ? 'Vehicle updated!' : 'Vehicle added!', 'success');
+      } else {
+        document.getElementById('carFormAlert').innerHTML = `<div class="alert alert-error"><i class="bi bi-exclamation-circle"></i>${data.error}</div>`;
+      }
+    } catch { document.getElementById('carFormAlert').innerHTML = `<div class="alert alert-error"><i class="bi bi-wifi-off"></i>Network error.</div>`; }
+    finally { btn.disabled = false; btn.innerHTML = '<i class="bi bi-check-lg"></i> Save Vehicle'; }
+  });
+
+  document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+    if (!deleteCarId) return;
+    try {
+      const res = await fetch(`/api/cars/${deleteCarId}`, { method:'DELETE', headers: { Authorization: 'Bearer ' + token } });
+      const data = await res.json();
+      if (data.success) { document.getElementById('deleteModal').classList.remove('open'); loadCars(currentPage); }
+    } catch { alert('Failed to delete vehicle'); }
+  });
+
+  document.getElementById('addCarBtn').addEventListener('click', openAddModal);
+  document.getElementById('closeCarModal').addEventListener('click', () => document.getElementById('carModal').classList.remove('open'));
+  document.getElementById('cancelCarBtn').addEventListener('click', () => document.getElementById('carModal').classList.remove('open'));
+  document.getElementById('searchCarsBtn').addEventListener('click', () => loadCars(1));
+  document.getElementById('carSearch').addEventListener('keydown', e => { if (e.key === 'Enter') loadCars(1); });
+  document.getElementById('refreshCarsBtn').addEventListener('click', () => loadCars(currentPage));
+
+  // Open add modal if ?action=add
+  if (new URLSearchParams(location.search).get('action') === 'add') openAddModal();
+
+  loadCars();
+</script>
+</body>
+</html>
