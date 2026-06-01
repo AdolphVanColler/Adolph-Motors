@@ -73,10 +73,15 @@ const cars = [
     is_featured: 1,
   },
   {
-    
-  param($m)
-  $m -replace "JSON\.stringify\(\[([^\]]+)\]\)", "JSON.stringify(['/uploads/cars/car-6-1.jpg', '/uploads/cars/car-6-2.jpg', '/uploads/cars/car-6-3.jpg'])"
-,
+    stock_number: 'AP006', vin: 'WAUZZZ8T5JA028461',
+    make: 'Audi', model: 'A4', variant: '2.0 TDI S Line Quattro',
+    year: 2023, price: 779900, mileage: 25000,
+    fuel_type: 'Diesel', transmission: 'Automatic', body_type: 'Sedan',
+    color: 'Mythos Black', engine: '2.0L TDI 4-cyl', doors: 4, seats: 5,
+    condition: 'Used', badge: null,
+    description: 'The Audi A4 S-Line Quattro represents refined elegance and all-weather performance. With S-Line sport specification, Virtual Cockpit Plus, and Audi\'s legendary Quattro AWD, this vehicle offers unparalleled driving confidence.',
+    features: JSON.stringify(['S-Line package', 'Quattro AWD', 'Virtual Cockpit Plus', 'MMI Navigation Plus', 'Bang & Olufsen 3D sound', 'Adaptive cruise assist', 'Lane centering', 'Audi pre sense', 'Matrix LED headlights', 'Wireless charging', 'Heated sport seats', '19" 5-V spoke alloys', 'Panoramic sunroof', 'Power boot lid']),
+    images: JSON.stringify(['/uploads/cars/car-6-1.jpg', '/uploads/cars/car-6-2.jpg', '/uploads/cars/car-6-3.jpg']),
     is_featured: 0,
   },
   {
